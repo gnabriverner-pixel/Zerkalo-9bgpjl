@@ -1,0 +1,53 @@
+{
+  "expo": {
+    "name": "Зеркало себя",
+    "slug": "zerkalo-sebya",
+    "version": "0.4.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/logo.png",
+    "scheme": "zerkalo",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "UIStatusBarStyle": "UIStatusBarStyleLightContent"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/logo.png",
+        "backgroundColor": "#090909"
+      },
+      "edgeToEdgeEnabled": true,
+      "statusBarStyle": "light-content"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/logo.png",
+      "name": "Зеркало себя",
+      "shortName": "Зеркало",
+      "themeColor": "#090909",
+      "backgroundColor": "#090909",
+      "display": "standalone",
+      "orientation": "portrait"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/logo.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#090909"
+        }
+      ],
+      "expo-web-browser"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
