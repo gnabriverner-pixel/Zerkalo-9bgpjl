@@ -8,7 +8,7 @@ import { getAgeMap } from '@/services/calculations';
 import { PremiumCard } from '@/components/ui/PremiumCard';
 import { SectionLabel } from '@/components/ui/SectionLabel';
 import { DisclaimerBanner } from '@/components/ui/DisclaimerBanner';
-import { Colors, Spacing, Typography, Radii, PLANET_COLORS } from '@/constants/theme';
+import { Colors, Spacing, Typography, Radii } from '@/constants/theme';
 
 export default function AgeMapScreen() {
   const router = useRouter();
@@ -58,7 +58,6 @@ export default function AgeMapScreen() {
       {ageMap.map((node, i) => {
         const isPast = node.age < currentAge;
         const isCurrent = node.age >= currentAge && node.age <= currentAge + 3;
-        const isFuture = node.age > currentAge + 3;
         const accentColor = isCurrent ? Colors.gold : (isPast ? Colors.textMuted : Colors.textSecondary);
 
         return (

@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { Colors, Radii, Spacing } from '@/constants/theme';
 
 interface PremiumCardProps {
   children: React.ReactNode;
   dark?: boolean;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 }
 
 export function PremiumCard({ children, dark = false, style }: PremiumCardProps) {

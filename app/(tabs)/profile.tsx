@@ -95,13 +95,13 @@ export default function ProfileScreen() {
             <View style={styles.premiumLeft}>
               <View style={styles.premiumBadge}>
                 <MaterialIcons name="workspace-premium" size={11} color={Colors.surfaceDark} />
-                <Text style={styles.premiumBadgeText}>БОЛЬШОЕ ИССЛЕДОВАНИЕ</Text>
+                <Text style={styles.premiumBadgeText}>ГЛУБОКИЙ РАЗБОР</Text>
               </View>
               <Text style={styles.premiumTitle}>22 раздела полного разбора</Text>
               <Text style={styles.premiumDesc}>Матрица · Деньги · Отношения · Циклы</Text>
             </View>
             <View style={styles.premiumRight}>
-              <Text style={styles.premiumPrice}>2 900 ₽</Text>
+              <Text style={styles.premiumPrice}>565 ₽</Text>
               <MaterialIcons name="arrow-forward" size={18} color={Colors.gold} />
             </View>
           </LinearGradient>
@@ -109,7 +109,7 @@ export default function ProfileScreen() {
       ) : (
         <View style={styles.premiumActiveCard}>
           <MaterialIcons name="workspace-premium" size={22} color={Colors.gold} />
-          <Text style={styles.premiumActiveText}>Большое исследование активировано</Text>
+          <Text style={styles.premiumActiveText}>Глубокий разбор активировано</Text>
           <Pressable onPress={() => router.push('/report')} style={styles.openReportBtn}>
             <Text style={styles.openReportText}>Открыть</Text>
           </Pressable>
@@ -153,7 +153,7 @@ export default function ProfileScreen() {
         <Text style={styles.disclaimerText}>
           Система «Цифровой Код» — авторский инструмент самоисследования и самопознания.
           Все интерпретации носят информационно-развлекательный характер, основаны на авторской системе
-          мастера Альберта Анатольевича Вяземского и культурных/ведических традициях осмысления чисел.
+          авторской системе Альберта Анатольевича Вяземского.
           Материалы предназначены для личной рефлексии и не являются профессиональной консультацией.
         </Text>
       </View>

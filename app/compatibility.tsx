@@ -16,7 +16,7 @@ import { PremiumCard } from '@/components/ui/PremiumCard';
 import { GoldButton } from '@/components/ui/GoldButton';
 import { SectionLabel } from '@/components/ui/SectionLabel';
 import { DisclaimerBanner } from '@/components/ui/DisclaimerBanner';
-import { Colors, Spacing, Typography, Radii, PLANET_NAMES, PLANET_COLORS } from '@/constants/theme';
+import { Colors, Spacing, Typography, Radii, PLANET_COLORS } from '@/constants/theme';
 
 export default function CompatibilityScreen() {
   const router = useRouter();
@@ -152,7 +152,7 @@ export default function CompatibilityScreen() {
                   <Text style={styles.codeDob}>{dob1}</Text>
                   <NumberBadge number={result.core1.resultFinal} composite={result.core1.resultComposite !== result.core1.resultFinal ? result.core1.resultComposite : undefined} size="lg" showPlanet />
                   <Text style={styles.codeFormula}>
-                    {result.core1.mindFinal}–{result.core1.actionFinal}–{result.core1.realizationFinal}–{result.core1.resultFinal}
+                    {result.core1.soulFinal}–{result.core1.pathFinal}–{result.core1.directionFinal}–{result.core1.resultFinal}
                   </Text>
                 </View>
 
@@ -170,7 +170,7 @@ export default function CompatibilityScreen() {
                   <Text style={styles.codeDob}>{dob2}</Text>
                   <NumberBadge number={result.core2.resultFinal} composite={result.core2.resultComposite !== result.core2.resultFinal ? result.core2.resultComposite : undefined} size="lg" showPlanet />
                   <Text style={styles.codeFormula}>
-                    {result.core2.mindFinal}–{result.core2.actionFinal}–{result.core2.realizationFinal}–{result.core2.resultFinal}
+                    {result.core2.soulFinal}–{result.core2.pathFinal}–{result.core2.directionFinal}–{result.core2.resultFinal}
                   </Text>
                 </View>
               </View>

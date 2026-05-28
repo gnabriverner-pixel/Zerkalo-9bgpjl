@@ -12,6 +12,7 @@ export const Colors = {
 
   // ── Brand ─────────────────────────────────────────────────────────────
   gold: '#D8B36A',              // Warm gold — primary accent
+  goldLight: '#E7C987',         // Light gold — readable highlight on dark bg
   goldSoft: '#B99352',          // Softer gold — secondary
   goldDim: 'rgba(216,179,106,0.35)', // Dim gold — borders
   goldGlow: 'rgba(216,179,106,0.10)', // Glow layer

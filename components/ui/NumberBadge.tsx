@@ -1,12 +1,15 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Colors, Radii, PLANET_COLORS, PLANET_NAMES, Typography } from '@/constants/theme';
+import { View, Text, StyleSheet, ViewStyle } from 'react-native';
+import { Colors, PLANET_COLORS, PLANET_NAMES, Typography } from '@/constants/theme';
 
 interface NumberBadgeProps {
   number: number;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   showPlanet?: boolean;
   showComposite?: number;
+  composite?: number;
+  label?: string;
+  style?: ViewStyle;
 }
 
 const SIZES = {
@@ -23,14 +26,15 @@ const FONT_SIZES = {
   xl: 32,
 };
 
-export function NumberBadge({ number, size = 'md', showPlanet, showComposite }: NumberBadgeProps) {
+export function NumberBadge({ number, size = 'md', showPlanet, showComposite, composite, label, style }: NumberBadgeProps) {
   const dim = SIZES[size];
   const fontSize = FONT_SIZES[size];
   const color = PLANET_COLORS[number] || Colors.gold;
   const planet = PLANET_NAMES[number] || '';
+  const compositeValue = showComposite ?? composite;
 
   return (
-    <View style={styles.wrap}>
+    <View style={[styles.wrap, style]}>
       <View style={[
         styles.circle,
         {
@@ -40,12 +44,13 @@ export function NumberBadge({ number, size = 'md', showPlanet, showComposite }: 
         },
       ]}>
         <Text style={[styles.num, { color, fontSize }]}>{number}</Text>
-        {showComposite != null && showComposite !== number ? (
+        {compositeValue != null && compositeValue !== number ? (
           <Text style={[styles.comp, { color: color + 'AA', fontSize: fontSize * 0.4 }]}>
-            {showComposite}
+            {compositeValue}
           </Text>
         ) : null}
       </View>
+      {label ? <Text style={styles.label}>{label}</Text> : null}
       {showPlanet ? (
         <Text style={[styles.planet, { color }]}>{planet}</Text>
       ) : null}
@@ -62,6 +67,11 @@ const styles = StyleSheet.create({
   },
   num: { fontWeight: '700', lineHeight: undefined },
   comp: { fontWeight: '500' },
+  label: {
+    ...Typography.label,
+    color: Colors.textMuted,
+    textAlign: 'center',
+  },
   planet: {
     ...Typography.caption,
     fontWeight: '600',

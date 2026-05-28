@@ -6,7 +6,7 @@ import { Colors } from '@/constants/theme';
 
 export default function Index() {
   const router = useRouter();
-  const { isOnboarded, user } = useApp();
+  const { isOnboarded } = useApp();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -17,7 +17,7 @@ export default function Index() {
       }
     }, 100);
     return () => clearTimeout(timer);
-  }, [isOnboarded]);
+  }, [isOnboarded, router]);
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background, alignItems: 'center', justifyContent: 'center' }}>

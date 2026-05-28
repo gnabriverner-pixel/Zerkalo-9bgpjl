@@ -7,7 +7,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useApp } from '@/hooks/useApp';
 import { Colors, Spacing, Typography, Radii, Shadows, PLANET_COLORS } from '@/constants/theme';
-import { NUMBER_LABELS } from '@/constants/numerology-data';
 
 interface Module {
   icon: string;
@@ -33,9 +32,6 @@ export default function HomeScreen() {
 
   const hasSession = currentSession !== null;
   const core = currentSession?.core;
-  const formula = core
-    ? `${core.soulFinal}—${core.expressionFinal}—${core.pathFinal}—${core.directionFinal}—${core.resultFinal}`
-    : '';
   const compositeStr = core
     ? `${core.expressionComposite} / ${core.pathComposite} / ${core.directionComposite} / ${core.resultComposite}`
     : '';
@@ -187,11 +183,11 @@ export default function HomeScreen() {
         <View style={styles.premiumCardTop}>
           <View style={styles.premiumBadge}>
             <MaterialIcons name="workspace-premium" size={11} color={Colors.background} />
-            <Text style={styles.premiumBadgeText}>БОЛЬШОЕ ИССЛЕДОВАНИЕ</Text>
+            <Text style={styles.premiumBadgeText}>ГЛУБОКИЙ РАЗБОР</Text>
           </View>
           {isPremium ? null : (
             <View style={styles.premiumPriceBlock}>
-              <Text style={styles.premiumPrice}>2 900 ₽</Text>
+              <Text style={styles.premiumPrice}>565 ₽</Text>
             </View>
           )}
         </View>

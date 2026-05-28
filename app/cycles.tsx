@@ -158,7 +158,7 @@ export default function CyclesScreen() {
             </View>
           ))}
           <View style={styles.lockedCta}>
-            <Text style={styles.lockedCtaText}>Открыть — 2 900 ₽</Text>
+            <Text style={styles.lockedCtaText}>Открыть — 565 ₽</Text>
             <MaterialIcons name="arrow-forward" size={14} color={Colors.surfaceDark} />
           </View>
         </Pressable>

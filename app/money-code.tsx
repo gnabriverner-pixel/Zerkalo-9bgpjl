@@ -150,7 +150,7 @@ export default function MoneyCodeScreen() {
             Где формула может раскрыться сильнее. Что усиливает масштаб. Какие привычки ограничивают денежный результат.
           </Text>
           <View style={styles.lockedCta}>
-            <Text style={styles.lockedCtaText}>Открыть полный денежный код — 2 900 ₽</Text>
+            <Text style={styles.lockedCtaText}>Открыть полный денежный код — 565 ₽</Text>
             <MaterialIcons name="arrow-forward" size={14} color={Colors.surfaceDark} />
           </View>
         </Pressable>

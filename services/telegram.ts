@@ -23,17 +23,17 @@ export const isTelegramWebApp = (): boolean => {
 
 /** Expand the Mini App to full height */
 export const expandApp = (): void => {
-  try { tg?.expand?.(); } catch (_) {}
+  try { tg?.expand?.(); } catch {}
 };
 
 /** Signal that the app is ready to display */
 export const readyApp = (): void => {
-  try { tg?.ready?.(); } catch (_) {}
+  try { tg?.ready?.(); } catch {}
 };
 
 /** Close the Mini App */
 export const closeApp = (): void => {
-  try { tg?.close?.(); } catch (_) {}
+  try { tg?.close?.(); } catch {}
 };
 
 /**
@@ -49,21 +49,21 @@ export const getTelegramUser = (): {
 } | null => {
   try {
     return tg?.initDataUnsafe?.user ?? null;
-  } catch (_) {
+  } catch {
     return null;
   }
 };
 
 /** Current Telegram color scheme (dark | light) */
 export const getTelegramColorScheme = (): 'dark' | 'light' => {
-  try { return tg?.colorScheme ?? 'dark'; } catch (_) { return 'dark'; }
+  try { return tg?.colorScheme ?? 'dark'; } catch { return 'dark'; }
 };
 
 /** Apply Telegram theme variables (call once on app start) */
 export const applyTelegramTheme = (): void => {
   if (!isTelegramWebApp()) return;
-  try { tg?.setHeaderColor?.('#090909'); } catch (_) {}
-  try { tg?.setBackgroundColor?.('#090909'); } catch (_) {}
+  try { tg?.setHeaderColor?.('#090909'); } catch {}
+  try { tg?.setBackgroundColor?.('#090909'); } catch {}
 };
 
 /**
@@ -71,5 +71,5 @@ export const applyTelegramTheme = (): void => {
  * See: https://core.telegram.org/bots/webapps#validating-data-received-via-the-mini-app
  */
 export const getInitData = (): string => {
-  try { return tg?.initData ?? ''; } catch (_) { return ''; }
+  try { return tg?.initData ?? ''; } catch { return ''; }
 };

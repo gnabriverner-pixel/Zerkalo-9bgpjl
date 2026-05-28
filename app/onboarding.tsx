@@ -4,13 +4,12 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useApp } from '@/hooks/useApp';
 import { MirrorSymbol } from '@/components/brand/MirrorSymbol';
 import { Colors, Spacing, Typography, Radii, Shadows } from '@/constants/theme';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const SLIDES = [
   {
@@ -27,7 +26,7 @@ const SLIDES = [
   },
   {
     id: 3,
-    tag: 'БОЛЬШОЕ ИССЛЕДОВАНИЕ',
+    tag: 'ГЛУБОКИЙ РАЗБОР',
     title: 'Дом Самопознания',
     body: 'Полный разбор: матрица, личные циклы, денежный код, периоды, зоны напряжения и практический вектор.',
   },

@@ -47,9 +47,9 @@ export default function ReportScreen() {
           <MaterialIcons name="close" size={24} color={Colors.textSecondary} />
         </Pressable>
         <MaterialIcons name="workspace-premium" size={48} color={Colors.gold} />
-        <Text style={styles.lockedTitle}>Большое исследование</Text>
+        <Text style={styles.lockedTitle}>Глубокий разбор</Text>
         <Text style={styles.lockedBody}>
-          Для доступа к полному персональному исследованию необходим PRO-доступ
+          Для доступа к полному персональному исследованию необходим оплаченный доступ
         </Text>
         <GoldButton
           title="Получить доступ"
@@ -60,7 +60,7 @@ export default function ReportScreen() {
     );
   }
 
-  const { core, matrix, cycles, money, name, dateOfBirth } = currentSession;
+  const { core, matrix, cycles, name, dateOfBirth } = currentSession;
   const yearMeaning = PERSONAL_YEAR_MEANINGS[cycles.personalYear];
 
   const renderSection = () => {
@@ -90,9 +90,9 @@ export default function ReportScreen() {
             <Text style={styles.sectionHeading}>Числовой паспорт</Text>
             <CodePassport core={core} name={name} dark />
             <Text style={styles.sectionBody}>
-              Базовая формула {name}: {core.mindFinal} — {core.actionFinal} — {core.realizationFinal} — {core.resultFinal}.
+              Базовая формула {name}: {core.soulFinal} — {core.pathFinal} — {core.directionFinal} — {core.resultFinal}.
               {'\n\n'}
-              Это одна из требовательных и красивых траекторий. Она говорит: внутри у человека есть природа {PLANET_NAMES[core.mindFinal]}, которая реализуется через {PLANET_NAMES[core.actionFinal]} и приходит к зрелому итогу {PLANET_NAMES[core.resultFinal]}.
+              Это одна из требовательных и красивых траекторий. Она говорит: внутри у человека есть природа {PLANET_NAMES[core.soulFinal]}, которая реализуется через {PLANET_NAMES[core.pathFinal]} и приходит к зрелому итогу {PLANET_NAMES[core.resultFinal]}.
             </Text>
           </View>
         );
@@ -110,7 +110,7 @@ export default function ReportScreen() {
             </Text>
             <PremiumCard dark>
               <Text style={styles.pullQuoteLight}>
-                {NUMBER_SHORT_MEANINGS[core.mindFinal]} — это внутренняя природа. Но важнее то, как эта природа превращена в форму жизни.
+                {NUMBER_SHORT_MEANINGS[core.soulFinal]} — это внутренняя природа. Но важнее то, как эта природа превращена в форму жизни.
               </Text>
             </PremiumCard>
           </View>
@@ -196,9 +196,9 @@ export default function ReportScreen() {
             <Text style={styles.sectionRoman}>{REPORT_SECTIONS[activeSection].split('.')[0]}</Text>
             <Text style={styles.sectionHeading}>{REPORT_SECTIONS[activeSection].replace(/^[IVX]+\.\s/, '')}</Text>
             <Text style={styles.sectionBody}>
-              Этот раздел раскрывает тему {REPORT_SECTIONS[activeSection].replace(/^[IVX]+\.\s/, '').toLowerCase()} в контексте вашего числового кода {core.mindFinal}–{core.actionFinal}–{core.realizationFinal}–{core.resultFinal}.
+              Этот раздел раскрывает тему {REPORT_SECTIONS[activeSection].replace(/^[IVX]+\.\s/, '').toLowerCase()} в контексте вашего числового кода {core.soulFinal}–{core.pathFinal}–{core.directionFinal}–{core.resultFinal}.
               {'\n\n'}
-              {NUMBER_SHORT_MEANINGS[core.mindFinal]} — это внутренняя природа. {NUMBER_SHORT_MEANINGS[core.actionFinal]} — способ действия. {NUMBER_SHORT_MEANINGS[core.realizationFinal]} — путь реализации. {NUMBER_SHORT_MEANINGS[core.resultFinal]} — зрелый итог.
+              {NUMBER_SHORT_MEANINGS[core.soulFinal]} — это внутренняя природа. {NUMBER_SHORT_MEANINGS[core.pathFinal]} — способ действия. {NUMBER_SHORT_MEANINGS[core.directionFinal]} — путь реализации. {NUMBER_SHORT_MEANINGS[core.resultFinal]} — зрелый итог.
             </Text>
           </View>
         );

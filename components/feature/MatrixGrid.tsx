@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { MatrixData } from '@/services/calculations';
-import { Colors, Spacing, Typography, Radii, PLANET_COLORS } from '@/constants/theme';
+import { Colors, Typography, Radii, PLANET_COLORS } from '@/constants/theme';
 
 interface MatrixGridProps {
   matrix: MatrixData;

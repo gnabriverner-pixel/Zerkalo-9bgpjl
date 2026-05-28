@@ -129,15 +129,14 @@ export function calculateCoreNumbers(day: number, month: number, year: number): 
   const soulFinal = reduceToSingle(day);
   const soulChain = day >= 10 ? buildChain(day) : String(day);
 
-  // ── Число Выражения (авторское расширение) ─────────────────────────────
-  // sum digits of DD and MM strings separately
   const ddStr = String(day).padStart(2, '0');
   const mmStr = String(month).padStart(2, '0');
-  const exprDigits = (ddStr + mmStr).split('').map(Number);
-  const exprFormula = exprDigits.join('+');
-  const expressionComposite = exprDigits.reduce((a, b) => a + b, 0);
+
+  // ── Число Выражения (авторское расширение) ─────────────────────────────
+  // Runtime parity with bot engine.py: day + month, not a DDMM digit sum.
+  const expressionComposite = day + month;
   const expressionFinal = reduceToSingle(expressionComposite);
-  const expressionChain = `${exprFormula} = ${buildChain(expressionComposite)}`;
+  const expressionChain = `${day} + ${month} = ${buildChain(expressionComposite)}`;
 
   // ── Число Пути ─────────────────────────────────────────────────────────
   const yyyyStr = String(year);

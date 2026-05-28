@@ -5,10 +5,9 @@ import {
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useApp } from '@/hooks/useApp';
 import { useAlert } from '@/template';
-import { Colors, Spacing, Typography, Radii, Shadows, PLANET_COLORS, PLANET_NAMES } from '@/constants/theme';
+import { Colors, Spacing, Typography, Radii, PLANET_COLORS, PLANET_NAMES } from '@/constants/theme';
 import {
   NUMBER_LABELS, NUMBER_INTERNAL_LABELS, NUMBER_DETAILED,
   NUMBER_POSITION_ESSENCE, EXPRESSION_DETAILED, PLANET_DISCLAIMER,
@@ -62,7 +61,7 @@ export default function ResultScreen() {
   const [activeTab, setActiveTab] = useState<Tab>('passport');
   const [saved, setSaved] = useState(false);
 
-  React.useEffect(() => { trackEvent('result_viewed'); }, []);
+  React.useEffect(() => { trackEvent('result_viewed'); }, [trackEvent]);
 
   if (!currentSession) {
     return (
@@ -365,7 +364,7 @@ export default function ResultScreen() {
           <View style={styles.upsellInner}>
             <MaterialIcons name="workspace-premium" size={24} color={Colors.gold} />
             <View style={{ flex: 1 }}>
-              <Text style={styles.upsellTitle}>Большое исследование</Text>
+              <Text style={styles.upsellTitle}>Глубокий разбор</Text>
               <Text style={styles.upsellDesc}>
                 Составные {core.expressionComposite}/{core.pathComposite}/{core.directionComposite}/{core.resultComposite} · матрица · циклы · деньги
               </Text>
@@ -373,7 +372,7 @@ export default function ResultScreen() {
             <View style={styles.upsellPrice}>
               {isPremium
                 ? <MaterialIcons name="check-circle" size={22} color={Colors.gold} />
-                : <Text style={styles.upsellPriceText}>2 900 ₽</Text>}
+                : <Text style={styles.upsellPriceText}>565 ₽</Text>}
             </View>
           </View>
         </Pressable>

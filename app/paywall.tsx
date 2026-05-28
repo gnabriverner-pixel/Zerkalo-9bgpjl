@@ -3,9 +3,9 @@ import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useApp } from '@/hooks/useApp';
 import { Colors, Spacing, Typography, Radii, Shadows } from '@/constants/theme';
+import { PRODUCT } from '@/constants/product';
 
 const INCLUDES = [
   'Детальная цепочка расчёта с составными числами',
@@ -21,7 +21,7 @@ const INCLUDES = [
 ];
 
 const TRUST = [
-  { icon: 'verified', text: 'Авторская система · мастер Альберт Вяземский' },
+  { icon: 'verified', text: PRODUCT.authorLine },
   { icon: 'lock', text: 'Разовая покупка · без подписки' },
   { icon: 'bookmark', text: 'Постоянный доступ к отчёту в аккаунте' },
 ];
@@ -67,10 +67,10 @@ export default function PaywallScreen() {
           {/* Badge */}
           <View style={styles.heroBadge}>
             <MaterialIcons name="workspace-premium" size={12} color={Colors.background} />
-            <Text style={styles.heroBadgeText}>БОЛЬШОЕ ИССЛЕДОВАНИЕ</Text>
+            <Text style={styles.heroBadgeText}>ГЛУБОКИЙ РАЗБОР</Text>
           </View>
 
-          <Text style={styles.heroTitle}>Дом{'\n'}Самопознания</Text>
+          <Text style={styles.heroTitle}>Зеркало{'\n'}себя</Text>
           <Text style={styles.heroSubtitle}>Персональный PDF-разбор вашей формулы</Text>
 
           {core ? (
@@ -123,9 +123,9 @@ export default function PaywallScreen() {
         <Pressable
           onPress={handlePurchase}
           style={({ pressed }) => [styles.ctaBtn, pressed && { opacity: 0.88 }]}
-          accessibilityLabel="Открыть за 2 900 ₽"
+          accessibilityLabel={`Открыть за ${PRODUCT.deepReportPriceLabel}`}
         >
-          <Text style={styles.ctaBtnText}>Открыть за 2 900 ₽</Text>
+          <Text style={styles.ctaBtnText}>Открыть за {PRODUCT.deepReportPriceLabel}</Text>
         </Pressable>
         <Text style={styles.ctaSub}>
           Разовая покупка · без подписки · не является консультацией
