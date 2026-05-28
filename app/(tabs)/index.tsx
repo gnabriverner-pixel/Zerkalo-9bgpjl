@@ -187,7 +187,7 @@ export default function HomeScreen() {
           </View>
           {isPremium ? null : (
             <View style={styles.premiumPriceBlock}>
-              <Text style={styles.premiumPrice}>565 ₽</Text>
+              <Text style={styles.premiumPrice}>650 ₽</Text>
             </View>
           )}
         </View>

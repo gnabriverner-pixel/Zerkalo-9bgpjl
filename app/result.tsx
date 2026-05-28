@@ -372,7 +372,7 @@ export default function ResultScreen() {
             <View style={styles.upsellPrice}>
               {isPremium
                 ? <MaterialIcons name="check-circle" size={22} color={Colors.gold} />
-                : <Text style={styles.upsellPriceText}>565 ₽</Text>}
+                : <Text style={styles.upsellPriceText}>650 ₽</Text>}
             </View>
           </View>
         </Pressable>

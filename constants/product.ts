@@ -1,6 +1,6 @@
 export const PRODUCT = {
   deepReportName: 'Глубокий разбор',
-  deepReportPriceRub: 565,
-  deepReportPriceLabel: '565 ₽',
+  deepReportPriceRub: 650,
+  deepReportPriceLabel: '650 ₽',
   authorLine: 'Авторская система Альберта Вяземского',
 };

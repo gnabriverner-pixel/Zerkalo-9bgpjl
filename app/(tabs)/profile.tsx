@@ -101,7 +101,7 @@ export default function ProfileScreen() {
               <Text style={styles.premiumDesc}>Матрица · Деньги · Отношения · Циклы</Text>
             </View>
             <View style={styles.premiumRight}>
-              <Text style={styles.premiumPrice}>565 ₽</Text>
+              <Text style={styles.premiumPrice}>650 ₽</Text>
               <MaterialIcons name="arrow-forward" size={18} color={Colors.gold} />
             </View>
           </LinearGradient>
