@@ -23,6 +23,7 @@ export default function RootLayout() {
             <Stack.Screen name="age-map" options={{ presentation: 'card' }} />
             <Stack.Screen name="report" options={{ presentation: 'modal' }} />
             <Stack.Screen name="paywall" options={{ presentation: 'modal' }} />
+            <Stack.Screen name="visual-passport" options={{ presentation: 'card' }} />
           </Stack>
         </AppProvider>
       </SafeAreaProvider>

@@ -19,6 +19,7 @@ interface Module {
 
 const MODULES: Module[] = [
   { icon: 'fingerprint', title: 'Мой код', desc: 'Пять чисел. Структура и паспорт.', route: '/result', needsSession: true },
+  { icon: 'style', title: 'Визуальный паспорт', desc: 'Карта чисел, синтез, практики, деньги.', route: '/visual-passport', needsSession: false },
   { icon: 'grid-4x4', title: 'Матрица', desc: 'Простая и детальная. Зоны развития.', route: '/matrix-detail', needsSession: true },
   { icon: 'autorenew', title: 'Циклы', desc: 'Личный год, месяцы, ключевые периоды.', route: '/cycles', needsSession: true },
   { icon: 'payments', title: 'Денежный код', desc: 'Финансовая формула и жизненный вектор.', route: '/money-code', needsSession: true },
