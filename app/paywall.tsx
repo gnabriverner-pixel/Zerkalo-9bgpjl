@@ -1,59 +1,80 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import {
+  View, Text, StyleSheet, ScrollView, Pressable, Animated, Dimensions,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useApp } from '@/hooks/useApp';
-import { Colors, Spacing, Typography, Radii, Shadows } from '@/constants/theme';
+import { Colors, Spacing, Typography, Radii, Shadows, PLANET_COLORS, PLANET_NAMES } from '@/constants/theme';
+
+const MOCK_PRICE = '2 900 ₽';  // ← change price here
 
 const INCLUDES = [
-  'Детальная цепочка расчёта с составными числами',
-  'Число Души · Выражения · Пути · Направления · Результата',
-  'Составные числа и их методологический смысл',
-  'Простая и детальная матрица рождения',
-  'Пустые зоны — полный разбор задач роста',
-  'Личный год и ключевые месяцы с интерпретацией',
-  'Денежный код — все четыре позиции',
-  'Зоны напряжения и практический вектор',
-  'Практический план',
-  'PDF-отчёт для сохранения',
+  { icon: 'layers',          text: 'Полный разбор пяти позиций с составными числами' },
+  { icon: 'grid-4x4',        text: 'Матрица рождения — простая и детальная' },
+  { icon: 'brightness-1',    text: 'Пустые зоны — полный разбор задач роста' },
+  { icon: 'autorenew',       text: 'Личный год и ключевые месяцы с интерпретацией' },
+  { icon: 'payments',        text: 'Все четыре позиции денежного кода' },
+  { icon: 'forum',           text: 'Коммуникационный код и способ взаимодействия' },
+  { icon: 'timeline',        text: 'Возрастная карта — точки активации формулы' },
+  { icon: 'people',          text: 'Совместимость — вектор двух кодов рядом' },
+  { icon: 'alt-route',       text: 'Зоны напряжения и практический вектор развития' },
+  { icon: 'picture-as-pdf',  text: 'PDF-разбор — персональный документ навсегда' },
 ];
 
 const TRUST = [
-  { icon: 'verified', text: 'Авторская система · мастер Альберт Вяземский' },
-  { icon: 'lock', text: 'Разовая покупка · без подписки' },
-  { icon: 'bookmark', text: 'Постоянный доступ к отчёту в аккаунте' },
+  { icon: 'verified',        text: 'Авторская система · Альберт Вяземский' },
+  { icon: 'lock',            text: 'Разовая покупка · без подписки' },
+  { icon: 'bookmark',        text: 'Постоянный доступ к PDF-разбору' },
+  { icon: 'info-outline',    text: 'Не является консультацией' },
 ];
+
+const { width: SW } = Dimensions.get('window');
 
 export default function PaywallScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { currentSession, unlockPremium, trackEvent } = useApp();
+  const fade = useRef(new Animated.Value(0)).current;
+  const slideUp = useRef(new Animated.Value(24)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fade,    { toValue: 1, duration: 500, useNativeDriver: true }),
+      Animated.spring(slideUp, { toValue: 0, tension: 70, friction: 10, useNativeDriver: true }),
+    ]).start();
+  }, []);
 
   const core = currentSession?.core;
   const name = currentSession?.name;
+  const dob  = currentSession?.dateOfBirth;
 
-  const formulaStr = core
-    ? `${core.soulFinal}—${core.expressionFinal}—${core.pathFinal}—${core.directionFinal}—${core.resultFinal}`
-    : '···—···—···—···—···';
+  const finals = core
+    ? [core.soulFinal, core.expressionFinal, core.pathFinal, core.directionFinal, core.resultFinal]
+    : [];
   const compositeStr = core
     ? `${core.expressionComposite} / ${core.pathComposite} / ${core.directionComposite} / ${core.resultComposite}`
     : '—';
+  const formulaStr = core
+    ? `${core.soulFinal}—${core.expressionFinal}—${core.pathFinal}—${core.directionFinal}—${core.resultFinal}`
+    : null;
+  const formulaColor = core ? (PLANET_COLORS[core.resultFinal] || Colors.gold) : Colors.gold;
 
   const handlePurchase = () => {
     trackEvent('purchase_cta_clicked', { product: 'big_report' });
-    trackEvent('purchase_started');
     unlockPremium();
     router.back();
   };
 
   return (
     <View style={styles.root}>
-      <ScrollView
+      <Animated.ScrollView
+        style={{ opacity: fade }}
         contentContainerStyle={[
           styles.content,
-          { paddingTop: insets.top + Spacing.sm, paddingBottom: insets.bottom + 120 },
+          { paddingTop: insets.top + Spacing.sm, paddingBottom: insets.bottom + 130 },
         ]}
         showsVerticalScrollIndicator={false}
       >
@@ -62,51 +83,88 @@ export default function PaywallScreen() {
           <MaterialIcons name="close" size={22} color={Colors.textMuted} />
         </Pressable>
 
-        {/* Hero */}
-        <View style={styles.hero}>
-          {/* Badge */}
+        {/* ── Hero ─────────────────────────────────────────────────── */}
+        <Animated.View style={[styles.hero, { transform: [{ translateY: slideUp }] }]}>
           <View style={styles.heroBadge}>
-            <MaterialIcons name="workspace-premium" size={12} color={Colors.background} />
+            <MaterialIcons name="workspace-premium" size={11} color={Colors.background} />
             <Text style={styles.heroBadgeText}>БОЛЬШОЕ ИССЛЕДОВАНИЕ</Text>
           </View>
 
           <Text style={styles.heroTitle}>Дом{'\n'}Самопознания</Text>
-          <Text style={styles.heroSubtitle}>Персональный PDF-разбор вашей формулы</Text>
+          <Text style={styles.heroSub}>Персональный PDF-разбор вашей формулы — 22 раздела в глубину</Text>
 
+          {/* Formula identity card */}
           {core ? (
-            <View style={styles.formulaBox}>
-              {name ? <Text style={styles.formulaBoxName}>{name}</Text> : null}
-              <Text style={styles.formulaBoxLabel}>Ваша формула</Text>
-              <Text style={styles.formulaBoxValue}>{formulaStr}</Text>
-              <Text style={styles.formulaBoxComposites}>составные: {compositeStr}</Text>
-              <View style={styles.formulaBoxNote}>
-                <MaterialIcons name="info-outline" size={12} color={Colors.gold} style={{ marginTop: 1 }} />
-                <Text style={styles.formulaBoxNoteText}>
-                  Раскрываем не только итоговые числа, но и составные — они показывают, как именно формируется ваш код.
+            <LinearGradient
+              colors={[Colors.surfaceDark, '#0C0C0A']}
+              style={styles.identCard}
+            >
+              <View style={styles.identTop}>
+                {name ? <Text style={styles.identName}>{name}</Text> : null}
+                {dob ? <Text style={styles.identDob}>{dob}</Text> : null}
+              </View>
+
+              {/* Five nodes */}
+              <View style={styles.identFormulaRow}>
+                {finals.map((n, i) => {
+                  const color = PLANET_COLORS[n] || Colors.gold;
+                  return (
+                    <React.Fragment key={i}>
+                      <View style={[styles.identNode, { borderColor: color + '50', backgroundColor: color + '0D' }]}>
+                        <Text style={[styles.identNodeNum, { color }]}>{n}</Text>
+                        <Text style={[styles.identNodePlanet, { color: color + 'AA' }]}>
+                          {PLANET_NAMES[n]?.slice(0, 3)}
+                        </Text>
+                      </View>
+                      {i < finals.length - 1 ? (
+                        <View style={[styles.identConnector, { backgroundColor: Colors.borderLight }]} />
+                      ) : null}
+                    </React.Fragment>
+                  );
+                })}
+              </View>
+
+              <View style={styles.identMeta}>
+                <Text style={styles.identMetaLabel}>составные</Text>
+                <Text style={styles.identMetaValue}>{compositeStr}</Text>
+              </View>
+
+              <View style={[styles.identNote, { borderColor: formulaColor + '20' }]}>
+                <MaterialIcons name="info-outline" size={11} color={Colors.gold} style={{ marginTop: 1 }} />
+                <Text style={styles.identNoteText}>
+                  Разбор раскрывает не только итоговые числа, но и составные — они показывают, как именно формируется код.
                 </Text>
               </View>
+            </LinearGradient>
+          ) : (
+            <View style={styles.identPlaceholder}>
+              <Text style={styles.identPlaceholderText}>
+                Рассчитайте свой код для персонального разбора
+              </Text>
             </View>
-          ) : null}
-        </View>
+          )}
+        </Animated.View>
 
-        {/* What's included */}
+        {/* ── What's included ──────────────────────────────────────── */}
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>ЧТО ВХОДИТ · 22 РАЗДЕЛА</Text>
           <View style={styles.includesList}>
             {INCLUDES.map((item, i) => (
-              <View key={i} style={styles.includeRow}>
-                <View style={styles.includeDot} />
-                <Text style={styles.includeText}>{item}</Text>
+              <View key={i} style={[styles.includeRow, i > 0 && styles.includeRowBorder]}>
+                <View style={styles.includeIconWrap}>
+                  <MaterialIcons name={item.icon as any} size={15} color={Colors.gold} />
+                </View>
+                <Text style={styles.includeText}>{item.text}</Text>
               </View>
             ))}
           </View>
         </View>
 
-        {/* Trust signals */}
-        <View style={styles.trustBlock}>
+        {/* ── Trust signals ─────────────────────────────────────────── */}
+        <View style={styles.trustGrid}>
           {TRUST.map((t, i) => (
-            <View key={i} style={styles.trustRow}>
-              <MaterialIcons name={t.icon as any} size={15} color={Colors.gold} />
+            <View key={i} style={styles.trustItem}>
+              <MaterialIcons name={t.icon as any} size={14} color={Colors.gold} />
               <Text style={styles.trustText}>{t.text}</Text>
             </View>
           ))}
@@ -114,22 +172,28 @@ export default function PaywallScreen() {
 
         {/* Disclaimer */}
         <Text style={styles.disclaimer}>
-          Система «Цифровой Код» носит информационно-развлекательный и самоисследовательский характер. Не является медицинской, психологической, финансовой или юридической консультацией.
+          Система «Цифровой Код» носит информационно-развлекательный и самоисследовательский характер.
+          Не является медицинской, психологической, финансовой или юридической консультацией.
         </Text>
-      </ScrollView>
+      </Animated.ScrollView>
 
-      {/* Fixed CTA */}
+      {/* ── Fixed CTA ─────────────────────────────────────────────── */}
       <View style={[styles.ctaBar, { paddingBottom: insets.bottom + Spacing.md }]}>
         <Pressable
           onPress={handlePurchase}
           style={({ pressed }) => [styles.ctaBtn, pressed && { opacity: 0.88 }]}
-          accessibilityLabel="Открыть за 2 900 ₽"
+          accessibilityLabel={`Открыть за ${MOCK_PRICE}`}
         >
-          <Text style={styles.ctaBtnText}>Открыть за 2 900 ₽</Text>
+          <LinearGradient
+            colors={[Colors.gold, Colors.goldSoft]}
+            start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+            style={styles.ctaBtnGrad}
+          >
+            <Text style={styles.ctaBtnText}>Открыть за {MOCK_PRICE}</Text>
+            <MaterialIcons name="arrow-forward" size={18} color={Colors.background} />
+          </LinearGradient>
         </Pressable>
-        <Text style={styles.ctaSub}>
-          Разовая покупка · без подписки · не является консультацией
-        </Text>
+        <Text style={styles.ctaSub}>Разовая покупка · без подписки · не является консультацией</Text>
       </View>
     </View>
   );
@@ -142,114 +206,88 @@ const styles = StyleSheet.create({
   closeBtn: { alignSelf: 'flex-end', padding: 4 },
 
   // Hero
-  hero: {
-    gap: Spacing.md,
-    paddingBottom: Spacing.lg,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.borderLight,
-  },
+  hero: { gap: Spacing.md },
   heroBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    backgroundColor: Colors.gold,
-    alignSelf: 'flex-start',
-    borderRadius: Radii.full,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    flexDirection: 'row', alignItems: 'center', gap: 5,
+    backgroundColor: Colors.gold, alignSelf: 'flex-start',
+    borderRadius: Radii.full, paddingHorizontal: 10, paddingVertical: 5,
   },
-  heroBadgeText: {
-    ...Typography.label,
-    color: Colors.background,
-    fontSize: 9,
-    letterSpacing: 0.8,
-  },
-  heroTitle: {
-    ...Typography.display,
-    color: Colors.textPrimary,
-    fontSize: 36,
-    lineHeight: 44,
-  },
-  heroSubtitle: {
-    ...Typography.body,
-    color: Colors.textMuted,
-  },
+  heroBadgeText: { ...Typography.label, color: Colors.background, fontSize: 9, letterSpacing: 0.8 },
+  heroTitle: { ...Typography.display, color: Colors.textPrimary, fontSize: 38, lineHeight: 46 },
+  heroSub: { ...Typography.body, color: Colors.textMuted, lineHeight: 24 },
 
-  // Formula box
-  formulaBox: {
-    backgroundColor: Colors.surface,
-    borderRadius: Radii.xl,
-    padding: Spacing.lg,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    gap: Spacing.xs,
-    marginTop: Spacing.xs,
+  // Identity card
+  identCard: {
+    borderRadius: Radii.xxl, padding: Spacing.xl, gap: Spacing.md,
+    borderWidth: 1, borderColor: Colors.borderLight,
   },
-  formulaBoxName: { ...Typography.caption, color: Colors.textMuted, fontStyle: 'italic' },
-  formulaBoxLabel: { ...Typography.label, color: Colors.gold },
-  formulaBoxValue: { fontSize: 26, fontWeight: '700', color: Colors.textPrimary, letterSpacing: 3 },
-  formulaBoxComposites: { ...Typography.caption, color: Colors.textMuted, fontStyle: 'italic' },
-  formulaBoxNote: { flexDirection: 'row', gap: 6, alignItems: 'flex-start', marginTop: 4 },
-  formulaBoxNoteText: { ...Typography.caption, color: Colors.textSecondary, flex: 1, lineHeight: 18 },
+  identTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
+  identName: { ...Typography.title, color: Colors.textPrimary, fontSize: 22 },
+  identDob: { ...Typography.caption, color: Colors.textMuted },
+  identFormulaRow: { flexDirection: 'row', alignItems: 'center' },
+  identNode: {
+    flex: 1, paddingVertical: 10, borderWidth: 1, borderRadius: Radii.md,
+    alignItems: 'center', gap: 2,
+  },
+  identNodeNum: { fontSize: 22, fontWeight: '700', lineHeight: 26 },
+  identNodePlanet: { fontSize: 9, fontWeight: '500' },
+  identConnector: { width: 6, height: 1, alignSelf: 'center' },
+  identMeta: { flexDirection: 'row', gap: Spacing.sm, alignItems: 'center' },
+  identMetaLabel: { ...Typography.label, color: Colors.textDisabled },
+  identMetaValue: { ...Typography.caption, color: Colors.textMuted, fontStyle: 'italic' },
+  identNote: {
+    flexDirection: 'row', gap: 6, alignItems: 'flex-start',
+    borderWidth: 1, borderRadius: Radii.sm, padding: Spacing.sm,
+    backgroundColor: Colors.goldTint,
+  },
+  identNoteText: { ...Typography.caption, color: Colors.textSecondary, flex: 1, lineHeight: 18 },
+  identPlaceholder: {
+    backgroundColor: Colors.surface, borderRadius: Radii.xl,
+    borderWidth: 1, borderColor: Colors.borderLight,
+    padding: Spacing.lg, alignItems: 'center',
+  },
+  identPlaceholderText: { ...Typography.bodySmall, color: Colors.textMuted, textAlign: 'center' },
 
   // Includes
   section: { gap: Spacing.md },
-  sectionLabel: { ...Typography.label, color: Colors.textMuted },
+  sectionLabel: { ...Typography.label, color: Colors.textMuted, letterSpacing: 1.2 },
   includesList: {
-    backgroundColor: Colors.surface,
-    borderRadius: Radii.xl,
-    padding: Spacing.lg,
-    borderWidth: 1,
-    borderColor: Colors.borderLight,
-    gap: Spacing.sm,
+    backgroundColor: Colors.surface, borderRadius: Radii.xl,
+    padding: Spacing.lg, borderWidth: 1, borderColor: Colors.borderLight,
   },
-  includeRow: { flexDirection: 'row', alignItems: 'flex-start', gap: Spacing.sm },
-  includeDot: { width: 5, height: 5, borderRadius: 3, backgroundColor: Colors.gold, marginTop: 8 },
-  includeText: { ...Typography.bodySmall, color: Colors.textSecondary, flex: 1, lineHeight: 22 },
+  includeRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.md, paddingVertical: 10 },
+  includeRowBorder: { borderTopWidth: 1, borderTopColor: Colors.borderLight },
+  includeIconWrap: {
+    width: 30, height: 30, borderRadius: 15,
+    backgroundColor: Colors.goldGlow, borderWidth: 1, borderColor: Colors.border,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  includeText: { ...Typography.bodySmall, color: Colors.textSecondary, flex: 1, lineHeight: 20 },
 
   // Trust
-  trustBlock: { gap: Spacing.sm },
-  trustRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.sm },
+  trustGrid: { gap: Spacing.sm },
+  trustItem: { flexDirection: 'row', alignItems: 'center', gap: Spacing.sm },
   trustText: { ...Typography.bodySmall, color: Colors.textSecondary },
 
   disclaimer: {
-    ...Typography.caption,
-    color: Colors.textDisabled,
-    lineHeight: 18,
-    textAlign: 'center',
-    fontSize: 10,
+    ...Typography.caption, color: Colors.textDisabled,
+    lineHeight: 18, textAlign: 'center', fontSize: 10,
   },
 
-  // CTA bar
+  // CTA
   ctaBar: {
-    position: 'absolute',
-    bottom: 0, left: 0, right: 0,
-    backgroundColor: Colors.background,
-    borderTopWidth: 1,
-    borderTopColor: Colors.borderLight,
-    paddingHorizontal: Spacing.lg,
-    paddingTop: Spacing.md,
-    gap: Spacing.xs,
+    position: 'absolute', bottom: 0, left: 0, right: 0,
+    backgroundColor: Colors.surfaceDark,
+    borderTopWidth: 1, borderTopColor: Colors.borderLight,
+    paddingHorizontal: Spacing.lg, paddingTop: Spacing.md, gap: Spacing.xs,
+    ...Shadows.lg,
   },
-  ctaBtn: {
-    backgroundColor: Colors.gold,
-    borderRadius: Radii.lg,
-    paddingVertical: 17,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: Spacing.xl,
-    ...Shadows.gold,
+  ctaBtn: { borderRadius: Radii.lg, overflow: 'hidden', ...Shadows.gold },
+  ctaBtnGrad: {
+    paddingVertical: 18, paddingHorizontal: Spacing.xl,
+    alignItems: 'center', justifyContent: 'center',
+    flexDirection: 'row', gap: Spacing.sm,
   },
-  ctaBtnText: {
-    ...Typography.button,
-    color: Colors.background,
-    fontWeight: '700',
-    fontSize: 16,
-  },
-  ctaSub: {
-    ...Typography.caption,
-    color: Colors.textDisabled,
-    textAlign: 'center',
-    fontSize: 10,
-  },
+  ctaBtnText: { ...Typography.button, color: Colors.background, fontWeight: '700', fontSize: 17 },
+  ctaSub: { ...Typography.caption, color: Colors.textDisabled, textAlign: 'center', fontSize: 10 },
 });
