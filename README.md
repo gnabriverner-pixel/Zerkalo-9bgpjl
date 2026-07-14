@@ -1,75 +1,42 @@
-# Welcome to OnSpace AI
+# Premium Visual Passport Prototype — DONOR / FROZEN
 
-Onspace AI empowers anyone to turn ideas into powerful AI applications in minutes—no coding required. Our free, no-code platform enables effortless creation of custom AI apps; simply describe your vision and our agentic AI handles the rest. The onspace-app, built with React Native and Expo, demonstrates this capability—integrating popular third-party libraries to deliver seamless cross-platform performance across iOS, Android, and Web environments.
+This repository contains an experimental React Native / Expo implementation of a premium visual passport experience.
 
-## Getting Started
+## Current status
 
-### 1. Install Dependencies
+- **Not a production source of truth for Digital Code.**
+- **Frozen as a donor/prototype unless explicitly reactivated.**
+- The canonical Digital Code runtime is `gnabriverner-pixel/digital-code-system`.
+- The canonical current Mini App lives inside `digital-code-system/webapp`.
+- The canonical public site is `gnabriverner-pixel/Zerkalo`.
 
-```bash
-npm install
-# or
-yarn install
-```
+## Why this repository is kept
 
-### 2. Start the Project
+The history contains real visual work, including Premium Visual Passport iterations. Unique interaction patterns, layout ideas or components may still be useful as donor material.
 
-- Start the development server (choose your platform):
+Before reusing anything:
 
-```bash
-npm run start         # Start Expo development server
-npm run android       # Launch Android emulator
-npm run ios           # Launch iOS simulator
-npm run web           # Start the web version
-```
+1. compare it with the current canonical Mini App;
+2. extract only clearly superior, still-relevant components;
+3. preserve current product contracts and data boundaries;
+4. do not replace the canonical production surface by assumption.
 
-- Reset the project (clear cache, etc.):
+## Agent rule
 
-```bash
-npm run reset-project
-```
+Do not:
 
-### 3. Lint the Code
+- treat this repository as the current Digital Code app;
+- deploy it over the production Mini App;
+- revive old OnSpace architecture without a current product decision;
+- infer current product status from this repository's history.
 
-```bash
-npm run lint
-```
+Do:
 
-## Main Dependencies
+- use it as a visual donor when a task explicitly asks for prototype research or component extraction;
+- keep it frozen when no donor task exists.
 
-- React Native: 0.79.4
-- React: 19.0.0
-- Expo: ~53.0.12
-- Expo Router: ~5.1.0
-- Supabase: ^2.50.0
-- Other commonly used libraries:  
-  - @expo/vector-icons  
-  - react-native-paper  
-  - react-native-calendars  
-  - lottie-react-native  
-  - react-native-webview  
-  - and more
+## Local development
 
-For a full list of dependencies, see [package.json](./package.json).
+This project is based on React Native / Expo. Inspect `package.json` for the exact current scripts and package-manager contract before running it.
 
-## Development Tools
-
-- TypeScript: ~5.8.3
-- ESLint: ^9.25.0
-- @babel/core: ^7.25.2
-
-## Contributing
-
-1. Fork this repository
-2. Create a new branch (`git checkout -b main`)
-3. Commit your changes (`git commit -am 'Add new feature'`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is private ("private": true). For collaboration inquiries, please contact the author.
-
----
-
-Feel free to add project screenshots, API documentation, feature descriptions, or any other information as needed.
+The previous generic OnSpace README was removed because it obscured the repository's real role in the Digital Code ecosystem.
