@@ -71,7 +71,9 @@ export default function CalculateScreen() {
       showAlert('Ошибка расчёта', 'Проверьте правильность даты рождения');
       return;
     }
-    router.push('/result');
+    // V3: route through reveal sequence first, then first-mirror
+    // Fall back to /result if coming from direct tab navigation
+    router.push('/reveal');
   };
 
   const dobFilled = dob.length === 10;

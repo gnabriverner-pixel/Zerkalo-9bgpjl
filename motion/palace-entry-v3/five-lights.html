@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Five Lights Become a Route — Palace Entry V3</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #090909;
+      width: 100vw; height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+    }
+
+    .scene {
+      position: relative;
+      width: 390px; height: 844px;
+    }
+
+    /* ── Five independent lights ─────────────────── */
+    .light {
+      position: absolute;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      opacity: 0;
+    }
+
+    .light-core {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border-width: 1.5px; border-style: solid;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .light-num {
+      font-size: 18px; font-weight: 700;
+    }
+
+    .light-label {
+      margin-top: 4px;
+      font-size: 8px; font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+
+    /* Position each light independently */
+    .light-soul       { top: 160px; left: 40px;  animation: light-appear 0.8s cubic-bezier(0.16,1,0.3,1) 0.4s forwards; }
+    .light-expression { top: 280px; left: 165px; animation: light-appear 0.8s cubic-bezier(0.16,1,0.3,1) 0.8s forwards; }
+    .light-path       { top: 420px; left: 40px;  animation: light-appear 0.8s cubic-bezier(0.16,1,0.3,1) 1.2s forwards; }
+    .light-direction  { top: 540px; left: 165px; animation: light-appear 0.8s cubic-bezier(0.16,1,0.3,1) 1.6s forwards; }
+    .light-result     { top: 670px; left: 165px; animation: light-appear 0.8s cubic-bezier(0.16,1,0.3,1) 2.0s forwards; }
+
+    @keyframes light-appear {
+      from { opacity: 0; transform: scale(0.4) translateY(10px); }
+      to   { opacity: 1; transform: scale(1)   translateY(0px); }
+    }
+
+    /* ── Connection lines ────────────────────────── */
+    .route-svg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      opacity: 0;
+      animation: route-appear 1.2s ease-out 2.6s forwards;
+    }
+
+    @keyframes route-appear {
+      from { opacity: 0; }
+      to   { opacity: 0.3; }
+    }
+
+    /* ── Central conflict ────────────────────────── */
+    .conflict {
+      position: absolute;
+      right: 24px;
+      top: 320px;
+      width: 140px;
+      opacity: 0;
+      animation: card-appear 0.8s cubic-bezier(0.16,1,0.3,1) 4.0s forwards;
+    }
+
+    @keyframes card-appear {
+      from { opacity: 0; transform: translateX(16px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .conflict-label {
+      font-size: 9px; font-weight: 600;
+      letter-spacing: 1.5px; color: #D8B36A;
+      text-transform: uppercase; margin-bottom: 6px;
+    }
+
+    .conflict-text {
+      font-size: 11px; line-height: 1.6;
+      color: rgba(244,239,228,0.7);
+    }
+
+    /* ── Action point ────────────────────────────── */
+    .action-point {
+      position: absolute;
+      bottom: 80px; left: 40px; right: 40px;
+      text-align: center;
+      opacity: 0;
+      animation: card-appear 1s cubic-bezier(0.16,1,0.3,1) 5.5s forwards;
+    }
+
+    .action-label {
+      font-size: 9px; font-weight: 600;
+      letter-spacing: 1.5px; color: #5A8A7A;
+      text-transform: uppercase; margin-bottom: 8px;
+    }
+
+    .action-text {
+      font-size: 14px; line-height: 1.6;
+      color: #F4EFE4;
+    }
+
+    /* ── Route pulse ─────────────────────────────── */
+    .route-pulse {
+      position: absolute;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: #D8B36A;
+      opacity: 0;
+      animation: pulse-travel 2s ease-in-out 3.2s forwards;
+    }
+
+    @keyframes pulse-travel {
+      0%   { opacity: 0;   top: 190px; left: 60px; }
+      10%  { opacity: 0.8; }
+      40%  { opacity: 0.6; top: 310px; left: 185px; }
+      70%  { opacity: 0.5; top: 560px; left: 185px; }
+      90%  { opacity: 0.3; top: 695px; left: 185px; }
+      100% { opacity: 0;   top: 695px; left: 185px; }
+    }
+
+    /* Colors */
+    .c-venus   { color: #C87A8A; border-color: #C87A8A55; background: rgba(200,122,138,0.08); }
+    .c-moon    { color: #A8B8C8; border-color: #A8B8C855; background: rgba(168,184,200,0.08); }
+    .c-saturn  { color: #6A6A7A; border-color: #6A6A7A55; background: rgba(106,106,122,0.08); }
+    .c-mercury { color: #5A8A7A; border-color: #5A8A7A55; background: rgba(90,138,122,0.08); }
+    .c-sun     { color: #E8C040; border-color: #E8C04055; background: rgba(232,192,64,0.08); }
+
+    /* Storyboard */
+    .storyboard {
+      position: fixed; top: 16px; right: 16px;
+      font-size: 10px; color: rgba(216,179,106,0.4);
+      font-family: monospace; line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="scene">
+
+    <!-- Five independent lights -->
+    <div class="light light-soul">
+      <div class="light-core c-venus">
+        <span class="light-num" style="color:#C87A8A">6</span>
+      </div>
+      <span class="light-label" style="color:#C87A8A">Душа</span>
+    </div>
+
+    <div class="light light-expression">
+      <div class="light-core c-moon">
+        <span class="light-num" style="color:#A8B8C8">2</span>
+      </div>
+      <span class="light-label" style="color:#A8B8C8">Выражение</span>
+    </div>
+
+    <div class="light light-path">
+      <div class="light-core c-saturn">
+        <span class="light-num" style="color:#6A6A7A">8</span>
+      </div>
+      <span class="light-label" style="color:#6A6A7A">Путь</span>
+    </div>
+
+    <div class="light light-direction">
+      <div class="light-core c-mercury">
+        <span class="light-num" style="color:#5A8A7A">5</span>
+      </div>
+      <span class="light-label" style="color:#5A8A7A">Направление</span>
+    </div>
+
+    <div class="light light-result">
+      <div class="light-core c-sun">
+        <span class="light-num" style="color:#E8C040">1</span>
+      </div>
+      <span class="light-label" style="color:#E8C040">Результат</span>
+    </div>
+
+    <!-- Route SVG lines -->
+    <svg class="route-svg" viewBox="0 0 390 844">
+      <path d="M 70 190 L 195 310 L 70 450 L 195 570 L 195 700"
+        fill="none" stroke="#D8B36A" stroke-width="1.5" stroke-dasharray="4 4"/>
+    </svg>
+
+    <!-- Route pulse dot -->
+    <div class="route-pulse"></div>
+
+    <!-- Central conflict -->
+    <div class="conflict">
+      <div class="conflict-label">Главное противоречие</div>
+      <div class="conflict-text">
+        Венера хочет красоты. Сатурн требует дисциплины. Меркурий тянет в расширение.
+      </div>
+    </div>
+
+    <!-- Final action point -->
+    <div class="action-point">
+      <div class="action-label">Финальная точка действия</div>
+      <div class="action-text">
+        Собрать свою систему — и выйти с ней в мир через речь
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Storyboard -->
+  <div class="storyboard">
+    0.4s — Душа (6) appears<br>
+    0.8s — Выражение (2) appears<br>
+    1.2s — Путь (8) appears<br>
+    1.6s — Направление (5) appears<br>
+    2.0s — Результат (1) appears<br>
+    2.6s — Route lines form<br>
+    3.2s — Pulse travels route<br>
+    4.0s — Central conflict<br>
+    5.5s — Action point<br>
+    10s — Composition holds
+  </div>
+</body>
+</html>

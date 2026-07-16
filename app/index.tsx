@@ -11,7 +11,7 @@ export default function Index() {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (!isOnboarded) {
-        router.replace('/onboarding');
+        router.replace('/threshold');
       } else {
         router.replace('/(tabs)');
       }
