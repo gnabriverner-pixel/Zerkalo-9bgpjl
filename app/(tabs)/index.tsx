@@ -30,7 +30,7 @@ export default function HomeScreen() {
       <View style={styles.topBar}>
         <View>
           <Text style={styles.wordmark}>Зеркало себя</Text>
-          <Text style={styles.wordmarkSub}>Система Цифрового Кода</Text>
+          <Text style={styles.wordmarkSub}>Ведическая нумерология</Text>
         </View>
         <Pressable onPress={() => router.push('/(tabs)/profile')} style={styles.avatarBtn} hitSlop={10}>
           <View style={styles.avatarCircle}>
@@ -39,36 +39,52 @@ export default function HomeScreen() {
         </Pressable>
       </View>
 
-      {/* ── Flagship entry — Palace V3 ──────────────────────────── */}
+      {/* ── Entry point ─────────────────────────────────────────── */}
       {!hasSession ? (
-        <Pressable
-          onPress={() => router.push('/threshold')}
-          style={({ pressed }) => [styles.palaceEntry, pressed && { opacity: 0.88 }]}
-        >
-          <LinearGradient
-            colors={[Colors.surfaceDark, Colors.surface]}
-            style={styles.palaceGrad}
+        <View style={styles.entryGroup}>
+          {/* Hero CTA */}
+          <Pressable
+            onPress={() => router.push('/threshold')}
+            style={({ pressed }) => [styles.heroCta, pressed && { opacity: 0.88 }]}
           >
-            {/* Five planet dots */}
-            <View style={styles.planetRow}>
-              {[Colors.venus, Colors.moon, Colors.saturn, Colors.mercury, Colors.sun].map((c, i) => (
-                <View key={i} style={[styles.planetDot, { backgroundColor: c }]} />
-              ))}
+            <LinearGradient
+              colors={[Colors.surfaceDark, Colors.surface]}
+              style={styles.heroCtaGrad}
+            >
+              {/* Nine planet dots */}
+              <View style={styles.planetRow}>
+                {[Colors.venus, Colors.moon, Colors.saturn, Colors.mercury, Colors.sun, Colors.jupiter, Colors.mars, Colors.rahu, Colors.ketu].map((c, i) => (
+                  <View key={i} style={[styles.planetDot, { backgroundColor: c }]} />
+                ))}
+              </View>
+              <View style={styles.heroBadge}>
+                <View style={styles.heroBadgeDot} />
+                <Text style={styles.heroBadgeText}>ЗЕРКАЛО СЕБЯ</Text>
+              </View>
+              <Text style={styles.heroTitle}>Откройте свой{'\n'}цифровой код</Text>
+              <Text style={styles.heroBody}>
+                Ведическая нумерология · девять архетипов · ваша персональная карта
+              </Text>
+              <View style={styles.heroBtn}>
+                <Text style={styles.heroBtnText}>Открыть свой код</Text>
+                <MaterialIcons name="arrow-forward" size={14} color={Colors.background} />
+              </View>
+            </LinearGradient>
+          </Pressable>
+
+          {/* World / System link */}
+          <Pressable
+            onPress={() => router.push('/world')}
+            style={({ pressed }) => [styles.worldCard, pressed && { opacity: 0.85 }]}
+          >
+            <MaterialIcons name="language" size={18} color={Colors.gold} />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.worldTitle}>Узнать систему</Text>
+              <Text style={styles.worldDesc}>Девять архетипов · как устроена ведическая нумерология</Text>
             </View>
-            <View style={styles.palaceBadge}>
-              <View style={styles.palaceBadgeDot} />
-              <Text style={styles.palaceBadgeText}>ВИЗУАЛЬНЫЙ ПАСПОРТ</Text>
-            </View>
-            <Text style={styles.palaceTitle}>Открыть первое зеркало</Text>
-            <Text style={styles.palaceBody}>
-              Дата рождения → Первое зеркало → Живой паспорт
-            </Text>
-            <View style={styles.palaceCta}>
-              <Text style={styles.palaceCtaText}>Начать</Text>
-              <MaterialIcons name="arrow-forward" size={14} color={Colors.background} />
-            </View>
-          </LinearGradient>
-        </Pressable>
+            <MaterialIcons name="chevron-right" size={18} color={Colors.textDisabled} />
+          </Pressable>
+        </View>
       ) : (
         /* ── Active session ──────────────────────────────────────── */
         <View style={styles.sessionGroup}>
@@ -130,11 +146,12 @@ export default function HomeScreen() {
         <Text style={styles.sectionTitle}>Инструменты</Text>
         <View style={styles.moduleList}>
           {[
-            { icon: 'auto-stories', title: 'Живой паспорт', desc: 'Семь залов, полный маршрут', route: '/living-passport', v3: true },
+            { icon: 'auto-stories', title: 'Живой паспорт', desc: 'Семь залов, полный маршрут', route: '/living-passport', highlight: true },
             { icon: 'fingerprint',  title: 'Мой код',       desc: 'Паспорт · числа · синтез',  route: '/result',          needsSession: true },
             { icon: 'grid-4x4',     title: 'Матрица',       desc: 'Ресурсы и зоны задач',      route: '/matrix-detail',   needsSession: true },
             { icon: 'autorenew',    title: 'Циклы',         desc: 'Личный год и месяцы',        route: '/cycles',          needsSession: true },
             { icon: 'payments',     title: 'Денежный код',  desc: 'Карта реализации',           route: '/money-code',      needsSession: true },
+            { icon: 'language',     title: 'Мир системы',   desc: 'Девять архетипов',           route: '/world',           highlight: false },
           ].map((mod, i, arr) => {
             const locked = Boolean(mod.needsSession && !hasSession);
             return (
@@ -146,14 +163,15 @@ export default function HomeScreen() {
                   }}
                   style={({ pressed }) => [styles.modRow, pressed && { backgroundColor: Colors.surfaceElevated }]}
                 >
-                  <View style={[styles.modIconWrap, locked && styles.modIconLocked, mod.v3 && styles.modIconV3]}>
-                    <MaterialIcons name={mod.icon as any} size={18} color={locked ? Colors.textDisabled : mod.v3 ? Colors.background : Colors.gold} />
+                  <View style={[
+                    styles.modIconWrap,
+                    locked && styles.modIconLocked,
+                    mod.highlight && styles.modIconHighlight,
+                  ]}>
+                    <MaterialIcons name={mod.icon as any} size={18} color={locked ? Colors.textDisabled : mod.highlight ? Colors.background : Colors.gold} />
                   </View>
                   <View style={styles.modText}>
-                    <View style={styles.modTitleRow}>
-                      <Text style={[styles.modTitle, locked && { color: Colors.textDisabled }]}>{mod.title}</Text>
-                      {mod.v3 ? <View style={styles.v3Badge}><Text style={styles.v3BadgeText}>V3</Text></View> : null}
-                    </View>
+                    <Text style={[styles.modTitle, locked && { color: Colors.textDisabled }]}>{mod.title}</Text>
                     <Text style={styles.modDesc}>{mod.desc}</Text>
                   </View>
                   <MaterialIcons
@@ -198,7 +216,7 @@ export default function HomeScreen() {
         </View>
       </Pressable>
 
-      {/* ── Recalculate CTA (if session exists) ─────────────────── */}
+      {/* Recalculate CTA */}
       {hasSession ? (
         <Pressable
           onPress={() => router.push('/(tabs)/calculate')}
@@ -240,25 +258,37 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center',
   },
 
-  // Palace entry
-  palaceEntry: {
+  // Entry group
+  entryGroup: { gap: Spacing.sm },
+
+  // Hero CTA
+  heroCta: {
     borderRadius: Radii.xxl, overflow: 'hidden',
     borderWidth: 1, borderColor: Colors.border, ...Shadows.gold,
   },
-  palaceGrad: { padding: Spacing.xl, gap: Spacing.md },
-  planetRow: { flexDirection: 'row', gap: 7 },
+  heroCtaGrad: { padding: Spacing.xl, gap: Spacing.md },
+  planetRow: { flexDirection: 'row', gap: 6 },
   planetDot: { width: 10, height: 10, borderRadius: 5, opacity: 0.7 },
-  palaceBadge: { flexDirection: 'row', alignItems: 'center', gap: 7 },
-  palaceBadgeDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: Colors.gold },
-  palaceBadgeText: { ...Typography.label, color: Colors.gold, letterSpacing: 2 },
-  palaceTitle: { fontSize: 26, fontWeight: '700', color: Colors.textPrimary, lineHeight: 32 },
-  palaceBody: { ...Typography.bodySmall, color: Colors.textMuted, lineHeight: 22 },
-  palaceCta: {
+  heroBadge: { flexDirection: 'row', alignItems: 'center', gap: 7 },
+  heroBadgeDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: Colors.gold },
+  heroBadgeText: { ...Typography.label, color: Colors.gold, letterSpacing: 2 },
+  heroTitle: { fontSize: 26, fontWeight: '700', color: Colors.textPrimary, lineHeight: 32 },
+  heroBody: { ...Typography.bodySmall, color: Colors.textMuted, lineHeight: 22 },
+  heroBtn: {
     flexDirection: 'row', alignItems: 'center', gap: 6,
     backgroundColor: Colors.gold, alignSelf: 'flex-start',
     borderRadius: Radii.full, paddingHorizontal: Spacing.md, paddingVertical: 9,
   },
-  palaceCtaText: { ...Typography.button, color: Colors.background, fontWeight: '700' },
+  heroBtnText: { ...Typography.button, color: Colors.background, fontWeight: '700' },
+
+  // World card
+  worldCard: {
+    flexDirection: 'row', alignItems: 'center', gap: Spacing.md,
+    backgroundColor: Colors.surface, borderRadius: Radii.xl,
+    borderWidth: 1, borderColor: Colors.borderLight, padding: Spacing.md,
+  },
+  worldTitle: { ...Typography.bodySmall, color: Colors.textPrimary, fontWeight: '600', marginBottom: 2 },
+  worldDesc: { ...Typography.caption, color: Colors.textMuted },
 
   // Active session
   sessionGroup: { gap: Spacing.sm },
@@ -309,15 +339,9 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: Colors.border,
   },
   modIconLocked: { backgroundColor: Colors.surfaceAlt, borderColor: Colors.borderLight },
-  modIconV3: { backgroundColor: Colors.gold },
+  modIconHighlight: { backgroundColor: Colors.gold },
   modText: { flex: 1 },
-  modTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 7 },
   modTitle: { ...Typography.bodySmall, color: Colors.textPrimary, fontWeight: '600' },
-  v3Badge: {
-    backgroundColor: Colors.gold + '20', borderRadius: Radii.full,
-    paddingHorizontal: 6, paddingVertical: 1, borderWidth: 1, borderColor: Colors.border,
-  },
-  v3BadgeText: { ...Typography.label, color: Colors.gold, fontSize: 8 },
   modDesc: { ...Typography.caption, color: Colors.textMuted, marginTop: 2 },
   modDivider: { height: 1, backgroundColor: Colors.borderLight, marginHorizontal: Spacing.md },
 

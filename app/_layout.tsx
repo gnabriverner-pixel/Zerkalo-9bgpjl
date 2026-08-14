@@ -24,6 +24,7 @@ export default function RootLayout() {
             <Stack.Screen name="report" options={{ presentation: 'modal' }} />
             <Stack.Screen name="paywall" options={{ presentation: 'modal' }} />
             <Stack.Screen name="threshold" options={{ presentation: 'card' }} />
+            <Stack.Screen name="world" options={{ presentation: 'card' }} />
             <Stack.Screen name="reveal" options={{ presentation: 'card' }} />
             <Stack.Screen name="first-mirror" options={{ presentation: 'card' }} />
             <Stack.Screen name="living-passport" options={{ presentation: 'card' }} />
