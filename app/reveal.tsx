@@ -41,7 +41,8 @@ const { width: SW } = Dimensions.get('window');
 type RevealStep =
   | { type: 'key'; positionIndex: number; positionLabel: string; roleLabel: string; number: number; archetype: (typeof ARCHETYPES)[number] }
   | { type: 'connection'; soul: number; expression: number }
-  | { type: 'map'; positions: MirrorProfile['positions'] };
+  | { type: 'map'; positions: MirrorProfile['positions'] }
+  | { type: 'composites'; positions: MirrorProfile['positions'] };
 
 function KeyCard({
   step, onContinue, isFinal,
@@ -276,14 +277,14 @@ function MapReveal({
       <Pressable
         onPress={onContinue}
         style={({ pressed }) => [styles.mapCta, pressed && { opacity: 0.88 }]}
-        accessibilityLabel="Открыть полный паспорт"
+        accessibilityLabel="Посмотреть глубже"
       >
         <LinearGradient
           colors={[Colors.gold, Colors.goldSoft]}
           start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
           style={styles.mapCtaGrad}
         >
-          <Text style={styles.mapCtaText}>Открыть полный паспорт</Text>
+          <Text style={styles.mapCtaText}>Посмотреть глубже</Text>
           <MaterialIcons name="arrow-forward" size={17} color={Colors.background} />
         </LinearGradient>
       </Pressable>
@@ -310,6 +311,157 @@ function buildConnectionText(soul: number, expr: number, profile: MirrorProfile)
 
   // Generic fallback
   return `${soulPos.planet} внутри и ${exprPos.planet} в выражении — это не одно и то же направление. ${soulPos.humanDescription.split('.')[0]}. Но проявляется через ${exprPos.humanDescription.split('.')[0].toLowerCase()}. Именно здесь часто рождается и самое интересное напряжение.`;
+}
+
+// ── Composite numbers reveal ─────────────────────────────────────────────────
+
+function CompositesReveal({
+  step, onContinue, profile,
+}: {
+  step: Extract<RevealStep, { type: 'composites' }>;
+  onContinue: () => void;
+  profile: MirrorProfile;
+}) {
+  const fade = useRef(new Animated.Value(0)).current;
+  const slide = useRef(new Animated.Value(24)).current;
+
+  // Positions that have a meaningful composite (composite ≠ final)
+  const withComposite = step.positions.filter(p => p.compositeNumber !== p.finalNumber);
+  const singleDigit = step.positions.filter(p => p.compositeNumber === p.finalNumber);
+
+  const rowFades = step.positions.map(() => useRef(new Animated.Value(0)).current);
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fade, { toValue: 1, duration: 500, useNativeDriver: true }),
+      Animated.spring(slide, { toValue: 0, ...Motion.spring.gentle, useNativeDriver: true }),
+    ]).start();
+
+    step.positions.forEach((_, i) => {
+      setTimeout(() => {
+        Animated.timing(rowFades[i], { toValue: 1, duration: 350, useNativeDriver: true }).start();
+      }, 160 + i * 130);
+    });
+  }, []);
+
+  return (
+    <Animated.View style={[styles.keyCard, { opacity: fade, transform: [{ translateY: slide }] }]}>
+      <View style={styles.stepTag}>
+        <Text style={[styles.stepTagText, { color: Colors.gold }]}>ЗА ЧИСЛАМИ</Text>
+      </View>
+
+      <Text style={styles.compositeTitle}>
+        В каждой позиции есть двойное дно.
+      </Text>
+      <Text style={styles.compositeSubtitle}>
+        Итоговое число рождается из составного. Две восьмёрки могут звучать совершенно по-разному — если одна пришла из 17, а другая из 35.
+      </Text>
+
+      {/* Positions with composite depth */}
+      {withComposite.length > 0 ? (
+        <View style={styles.compositesBlock}>
+          <Text style={[styles.compositeBlockLabel, { color: Colors.gold }]}>Составные числа в вашей формуле</Text>
+          {step.positions.map((pos, i) => {
+            const hasDepth = pos.compositeNumber !== pos.finalNumber;
+            return (
+              <Animated.View
+                key={pos.key}
+                style={[styles.compositeRow, { opacity: rowFades[i] }, !hasDepth && styles.compositeRowDim]}
+              >
+                {/* Role label */}
+                <Text style={styles.compositeRoleLabel}>
+                  {pos.label.replace('Число ', '')}
+                </Text>
+
+                {/* Chain visual */}
+                <View style={styles.compositeChainRow}>
+                  {hasDepth ? (
+                    <>
+                      <View style={[styles.compositeChainNum, { borderColor: pos.planetColor + '60', backgroundColor: pos.planetColor + '0D' }]}>
+                        <Text style={[styles.compositeChainBig, { color: pos.planetColor }]}>{pos.compositeNumber}</Text>
+                        <Text style={[styles.compositeChainTag, { color: pos.planetColor + 'AA' }]}>состав</Text>
+                      </View>
+                      <MaterialIcons name="arrow-forward" size={14} color={Colors.borderLight} style={{ marginHorizontal: 2 }} />
+                      <View style={[styles.compositeChainNum, { borderColor: pos.planetColor + '40', backgroundColor: 'transparent' }]}>
+                        <Text style={[styles.compositeChainBig, { color: pos.planetColor }]}>{pos.finalNumber}</Text>
+                        <Text style={[styles.compositeChainTag, { color: pos.planetColor + 'AA' }]}>итог</Text>
+                      </View>
+                      {/* Chain formula */}
+                      <View style={styles.compositeChainFormula}>
+                        <Text style={styles.compositeChainFormulaText}>{pos.calculationChain}</Text>
+                      </View>
+                    </>
+                  ) : (
+                    <>
+                      <View style={[styles.compositeChainNum, { borderColor: pos.planetColor + '30', backgroundColor: 'transparent' }]}>
+                        <Text style={[styles.compositeChainBig, { color: pos.planetColor + 'BB' }]}>{pos.finalNumber}</Text>
+                        <Text style={[styles.compositeChainTag, { color: pos.planetColor + '88' }]}>изначально</Text>
+                      </View>
+                      <Text style={styles.compositeChainSingle}>однозначное</Text>
+                    </>
+                  )}
+                </View>
+
+                {/* Composite insight text — only for those with depth */}
+                {hasDepth ? (
+                  <View style={[styles.compositeInsightBox, { borderColor: pos.planetColor + '20' }]}>
+                    <Text style={styles.compositeInsightText}>
+                      {buildCompositeInsight(pos.compositeNumber, pos.finalNumber, pos.planet)}
+                    </Text>
+                  </View>
+                ) : null}
+              </Animated.View>
+            );
+          })}
+        </View>
+      ) : null}
+
+      {/* Bridge text toward Deep */}
+      <View style={[styles.compositeBridgeBox, { borderColor: Colors.gold + '22' }]}>
+        <MaterialIcons name="lock-outline" size={14} color={Colors.gold} />
+        <View style={{ flex: 1, gap: 3 }}>
+          <Text style={[styles.compositeBridgeTitle, { color: Colors.gold }]}>Глубина остаётся</Text>
+          <Text style={styles.compositeBridgeText}>
+            В полном исследовании составные числа раскрываются как отдельный слой смысла. Каждое — это не просто путь к итогу, а собственная история.
+          </Text>
+        </View>
+      </View>
+
+      <Pressable
+        onPress={onContinue}
+        style={({ pressed }) => [styles.mapCta, pressed && { opacity: 0.88 }]}
+        accessibilityLabel="Открыть полный паспорт"
+      >
+        <LinearGradient
+          colors={[Colors.gold, Colors.goldSoft]}
+          start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+          style={styles.mapCtaGrad}
+        >
+          <Text style={styles.mapCtaText}>Открыть полный паспорт</Text>
+          <MaterialIcons name="arrow-forward" size={17} color={Colors.background} />
+        </LinearGradient>
+      </Pressable>
+    </Animated.View>
+  );
+}
+
+function buildCompositeInsight(composite: number, final: number, planet: string): string {
+  // Hand-crafted insight for common composites. Canonical: replace with interpretation service.
+  const insights: Record<number, string> = {
+    11: 'Одиннадцать — усиленная чуткость. Луна, но ярче: тонкость восприятия доведена до предела. Два рядом — это интенсивность контакта.',
+    22: 'Двадцать два — строитель крупного масштаба. Форма, умноженная на форму. Архитектор, которому нужны большие задачи.',
+    33: 'Тридцать три — знание как призвание. Юпитер в двойной силе: обучать, передавать, создавать системы понимания.',
+    35: 'Тридцать пять — Меркурий внутри Юпитера. Знание и движение одновременно. Путь медленный, но коммуникация делает его живым.',
+    41: 'Сорок один — форма ищет выхода. Раху создаёт основание, единица толкает вперёд. Направление может проявиться неожиданно.',
+    82: 'Восемьдесят два — Луна в основании Сатурна. Чуткость как ресурс для большого строительства. Итог созревает медленно, но он настоящий.',
+    14: 'Четырнадцать — Раху и Меркурий. Желание структуры встречается с желанием движения. Это напряжение и есть источник.',
+    16: 'Шестнадцать — Солнце и Венера. Личная сила ищет красоту как форму выражения.',
+    19: 'Девятнадцать — Солнце и Марс. Двойная воля. Лидерство через действие, а не через статус.',
+    28: 'Двадцать восемь — Луна и Сатурн. Чувствительность выдерживает тяжесть. Зрелость приходит через опыт близости.',
+  };
+  if (insights[composite]) return insights[composite];
+  // Generic
+  return `${composite} → ${final}: за итоговым числом стоит путь, который его образовал. Одинаковый результат из разных составных — это другой характер.`;
 }
 
 // ── Progress dots ─────────────────────────────────────────────────────────────
@@ -361,6 +513,7 @@ export default function RevealScreen() {
     { type: 'key', positionIndex: 3, positionLabel: 'Число Пути', roleLabel: 'Движение в мире', number: positions[2].finalNumber, archetype: ARCHETYPES[positions[2].finalNumber] },
     { type: 'key', positionIndex: 4, positionLabel: 'Число Направления', roleLabel: 'Форма раскрытия', number: positions[3].finalNumber, archetype: ARCHETYPES[positions[3].finalNumber] },
     { type: 'map', positions },
+    { type: 'composites', positions },
   ];
 
   useEffect(() => {
@@ -375,6 +528,8 @@ export default function RevealScreen() {
     } else if (step.type === 'connection') {
       analytics.track('reveal_connection_seen');
     } else if (step.type === 'map') {
+      analytics.track('reveal_map_viewed');
+    } else if (step.type === 'composites') {
       analytics.track('reveal_completed');
       router.replace('/first-mirror');
       return;
@@ -425,12 +580,14 @@ export default function RevealScreen() {
           <KeyCard
             step={currentStep}
             onContinue={handleNext}
-            isFinal={stepIndex === STEPS.length - 2}
+            isFinal={stepIndex === STEPS.length - 3}
           />
         ) : currentStep.type === 'connection' ? (
           <ConnectionCard step={currentStep} onContinue={handleNext} profile={profile} />
-        ) : (
+        ) : currentStep.type === 'map' ? (
           <MapReveal step={currentStep} onContinue={handleNext} profile={profile} />
+        ) : (
+          <CompositesReveal step={currentStep} onContinue={handleNext} profile={profile} />
         )}
       </Animated.ScrollView>
     </View>
@@ -566,10 +723,70 @@ const styles = StyleSheet.create({
     ...Typography.caption, color: Colors.textDisabled,
     textAlign: 'center', fontSize: 9, fontStyle: 'italic',
   },
-  mapCta: { borderRadius: Radii.lg, overflow: 'hidden' },
+  mapCta: { borderRadius: Radii.lg, overflow: 'hidden', marginTop: 4 },
   mapCtaGrad: {
     paddingVertical: 17, alignItems: 'center', justifyContent: 'center',
     flexDirection: 'row', gap: Spacing.sm,
   },
   mapCtaText: { ...Typography.button, color: Colors.background, fontWeight: '700', fontSize: 16 },
+
+  // Composites
+  compositeTitle: {
+    fontSize: 22, fontWeight: '700', color: Colors.textPrimary,
+    lineHeight: 30, letterSpacing: -0.2,
+  },
+  compositeSubtitle: {
+    ...Typography.body, color: Colors.textSecondary, lineHeight: 26,
+  },
+  compositesBlock: {
+    backgroundColor: Colors.surfaceDark, borderRadius: Radii.xl,
+    borderWidth: 1, borderColor: Colors.borderLight,
+    overflow: 'hidden',
+  },
+  compositeBlockLabel: {
+    ...Typography.label, letterSpacing: 1.2,
+    paddingHorizontal: Spacing.md, paddingTop: Spacing.md, paddingBottom: Spacing.xs,
+  },
+  compositeRow: {
+    paddingHorizontal: Spacing.md, paddingVertical: Spacing.sm,
+    gap: Spacing.xs, borderTopWidth: 1, borderTopColor: Colors.borderLight,
+  },
+  compositeRowDim: { opacity: 0.5 },
+  compositeRoleLabel: {
+    ...Typography.label, color: Colors.textMuted, fontSize: 10, letterSpacing: 0.8,
+  },
+  compositeChainRow: {
+    flexDirection: 'row', alignItems: 'center', gap: Spacing.xs, flexWrap: 'wrap',
+  },
+  compositeChainNum: {
+    minWidth: 52, height: 52, borderRadius: Radii.sm, borderWidth: 1,
+    alignItems: 'center', justifyContent: 'center', gap: 1,
+  },
+  compositeChainBig: { fontSize: 22, fontWeight: '700', lineHeight: 26 },
+  compositeChainTag: { fontSize: 8, lineHeight: 10 },
+  compositeChainFormula: {
+    flex: 1, backgroundColor: Colors.background, borderRadius: Radii.xs,
+    paddingHorizontal: Spacing.xs, paddingVertical: 4,
+  },
+  compositeChainFormulaText: {
+    ...Typography.caption, color: Colors.textDisabled, fontFamily: 'monospace', fontSize: 10,
+  },
+  compositeChainSingle: {
+    ...Typography.caption, color: Colors.textDisabled, fontStyle: 'italic', marginLeft: Spacing.xs,
+  },
+  compositeInsightBox: {
+    borderWidth: 1, borderRadius: Radii.sm, padding: Spacing.xs,
+    marginTop: 2,
+  },
+  compositeInsightText: {
+    ...Typography.caption, color: Colors.textSecondary, lineHeight: 18,
+  },
+  compositeBridgeBox: {
+    flexDirection: 'row', alignItems: 'flex-start', gap: Spacing.sm,
+    borderWidth: 1, borderRadius: Radii.xl, padding: Spacing.md,
+  },
+  compositeBridgeTitle: { ...Typography.label, letterSpacing: 1 },
+  compositeBridgeText: {
+    ...Typography.caption, color: Colors.textMuted, lineHeight: 18,
+  },
 });
