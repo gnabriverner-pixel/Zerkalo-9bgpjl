@@ -1,3 +1,9 @@
+/**
+ * Home Tab — "Зеркало себя"
+ * Quick-access hub inside tab navigation.
+ * Displays current session summary or CTA to start.
+ */
+
 import React from 'react';
 import {
   View, Text, StyleSheet, ScrollView, Pressable
@@ -8,6 +14,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useApp } from '@/hooks/useApp';
 import { Colors, Spacing, Typography, Radii, Shadows, PLANET_COLORS } from '@/constants/theme';
+import { Orb } from '@/components/brand/Orb';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -39,98 +46,65 @@ export default function HomeScreen() {
         </Pressable>
       </View>
 
-      {/* ── Entry point ─────────────────────────────────────────── */}
+      {/* Entry or session card */}
       {!hasSession ? (
-        <View style={styles.entryGroup}>
-          {/* Hero CTA */}
-          <Pressable
-            onPress={() => router.push('/threshold')}
-            style={({ pressed }) => [styles.heroCta, pressed && { opacity: 0.88 }]}
-          >
-            <LinearGradient
-              colors={[Colors.surfaceDark, Colors.surface]}
-              style={styles.heroCtaGrad}
-            >
-              {/* Nine planet dots */}
-              <View style={styles.planetRow}>
-                {[Colors.venus, Colors.moon, Colors.saturn, Colors.mercury, Colors.sun, Colors.jupiter, Colors.mars, Colors.rahu, Colors.ketu].map((c, i) => (
-                  <View key={i} style={[styles.planetDot, { backgroundColor: c }]} />
-                ))}
-              </View>
-              <View style={styles.heroBadge}>
-                <View style={styles.heroBadgeDot} />
-                <Text style={styles.heroBadgeText}>ЗЕРКАЛО СЕБЯ</Text>
-              </View>
-              <Text style={styles.heroTitle}>Откройте свой{'\n'}цифровой код</Text>
-              <Text style={styles.heroBody}>
-                Ведическая нумерология · девять архетипов · ваша персональная карта
-              </Text>
-              <View style={styles.heroBtn}>
-                <Text style={styles.heroBtnText}>Открыть свой код</Text>
-                <MaterialIcons name="arrow-forward" size={14} color={Colors.background} />
-              </View>
-            </LinearGradient>
-          </Pressable>
-
-          {/* World / System link */}
-          <Pressable
-            onPress={() => router.push('/world')}
-            style={({ pressed }) => [styles.worldCard, pressed && { opacity: 0.85 }]}
-          >
-            <MaterialIcons name="language" size={18} color={Colors.gold} />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.worldTitle}>Узнать систему</Text>
-              <Text style={styles.worldDesc}>Девять архетипов · как устроена ведическая нумерология</Text>
+        <Pressable
+          onPress={() => router.push('/index')}
+          style={({ pressed }) => [styles.heroCta, pressed && { opacity: 0.88 }]}
+        >
+          <LinearGradient colors={[Colors.surfaceDark, Colors.surface]} style={styles.heroCtaGrad}>
+            <View style={styles.heroOrbRow}>
+              <Orb color={Colors.gold} size={64} rotationDuration={20000} />
+              <Orb color={Colors.mythPrimary} size={48} rotationDuration={28000} />
             </View>
-            <MaterialIcons name="chevron-right" size={18} color={Colors.textDisabled} />
-          </Pressable>
-        </View>
+            <View style={styles.heroBadge}>
+              <View style={styles.heroBadgeDot} />
+              <Text style={styles.heroBadgeText}>ЗЕРКАЛО СЕБЯ</Text>
+            </View>
+            <Text style={styles.heroTitle}>Два зеркала{'\n'}одного человека</Text>
+            <Text style={styles.heroBody}>
+              Личный миф · Цифровой код · Встреча зеркал
+            </Text>
+            <View style={styles.heroBtn}>
+              <Text style={styles.heroBtnText}>Открыть свой код</Text>
+              <MaterialIcons name="arrow-forward" size={14} color={Colors.background} />
+            </View>
+          </LinearGradient>
+        </Pressable>
       ) : (
-        /* ── Active session ──────────────────────────────────────── */
-        <View style={styles.sessionGroup}>
-          {/* Quick passport access */}
-          <Pressable
-            onPress={() => router.push('/first-mirror')}
-            style={({ pressed }) => [styles.sessionCard, pressed && { opacity: 0.88 }]}
-          >
-            <View style={styles.sessionCardTop}>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.sessionLabel}>ВАША ФОРМУЛА</Text>
-                <Text style={styles.sessionName} numberOfLines={1}>{currentSession.name}</Text>
-                <Text style={styles.sessionDob}>{currentSession.dateOfBirth}</Text>
-              </View>
-              {core ? (
-                <View style={[styles.formulaCircle, { borderColor: (PLANET_COLORS[core.resultFinal] || Colors.gold) + '50' }]}>
-                  <Text style={[styles.formulaText, { color: PLANET_COLORS[core.resultFinal] || Colors.gold }]}>
-                    {core.soulFinal}—{core.expressionFinal}{'\n'}{core.pathFinal}—{core.directionFinal}—{core.resultFinal}
-                  </Text>
-                </View>
-              ) : null}
+        <Pressable
+          onPress={() => router.push('/living-passport')}
+          style={({ pressed }) => [styles.sessionCard, pressed && { opacity: 0.88 }]}
+        >
+          <View style={styles.sessionCardTop}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.sessionLabel}>ВАША ФОРМУЛА</Text>
+              <Text style={styles.sessionName} numberOfLines={1}>{currentSession.name}</Text>
+              <Text style={styles.sessionDob}>{currentSession.dateOfBirth}</Text>
             </View>
-            <View style={styles.sessionFooter}>
-              <Text style={styles.sessionCta}>Открыть зеркало</Text>
-              <MaterialIcons name="arrow-forward" size={13} color={Colors.gold} />
-            </View>
-          </Pressable>
-
-          {/* Five-number quick strip */}
+            {core ? (
+              <Orb
+                color={PLANET_COLORS[core.resultFinal] || Colors.gold}
+                size={64}
+                rotationDuration={20000}
+              />
+            ) : null}
+          </View>
           {core ? (
             <View style={styles.statsRow}>
               {[
-                { label: 'Душа', final: core.soulFinal, comp: core.soulComposite },
-                { label: 'Выраж.', final: core.expressionFinal, comp: core.expressionComposite },
-                { label: 'Путь', final: core.pathFinal, comp: core.pathComposite },
-                { label: 'Напр.', final: core.directionFinal, comp: core.directionComposite },
-                { label: 'Рез.', final: core.resultFinal, comp: core.resultComposite },
+                { label: 'Душа', final: core.soulFinal },
+                { label: 'Выраж.', final: core.expressionFinal },
+                { label: 'Путь', final: core.pathFinal },
+                { label: 'Напр.', final: core.directionFinal },
+                { label: 'Рез.', final: core.resultFinal },
               ].map((n, i) => {
                 const color = PLANET_COLORS[n.final] || Colors.gold;
-                const showComp = n.comp !== n.final;
                 return (
                   <React.Fragment key={n.label}>
                     {i > 0 ? <View style={styles.statDivider} /> : null}
                     <View style={styles.stat}>
                       <Text style={[styles.statFinal, { color }]}>{n.final}</Text>
-                      {showComp ? <Text style={[styles.statComp, { color: color + 'AA' }]}>{n.comp}</Text> : null}
                       <Text style={styles.statLabel}>{n.label}</Text>
                     </View>
                   </React.Fragment>
@@ -138,20 +112,24 @@ export default function HomeScreen() {
               })}
             </View>
           ) : null}
-        </View>
+          <View style={styles.sessionFooter}>
+            <Text style={styles.sessionCta}>Открыть живой паспорт</Text>
+            <MaterialIcons name="arrow-forward" size={13} color={Colors.gold} />
+          </View>
+        </Pressable>
       )}
 
-      {/* ── Journey shortcuts ────────────────────────────────────── */}
+      {/* Module list */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Инструменты</Text>
         <View style={styles.moduleList}>
           {[
-            { icon: 'auto-stories', title: 'Живой паспорт', desc: 'Семь залов, полный маршрут', route: '/living-passport', highlight: true },
-            { icon: 'fingerprint',  title: 'Мой код',       desc: 'Паспорт · числа · синтез',  route: '/result',          needsSession: true },
-            { icon: 'grid-4x4',     title: 'Матрица',       desc: 'Ресурсы и зоны задач',      route: '/matrix-detail',   needsSession: true },
-            { icon: 'autorenew',    title: 'Циклы',         desc: 'Личный год и месяцы',        route: '/cycles',          needsSession: true },
-            { icon: 'payments',     title: 'Денежный код',  desc: 'Карта реализации',           route: '/money-code',      needsSession: true },
-            { icon: 'language',     title: 'Мир системы',   desc: 'Девять архетипов',           route: '/world',           highlight: false },
+            { icon: 'auto-stories', title: 'Личный миф', desc: '4 образных вопроса · история', route: '/myth', color: Colors.mythPrimary },
+            { icon: 'fingerprint',  title: 'Живой паспорт', desc: '7 залов · полный маршрут', route: '/living-passport', color: Colors.gold, needsSession: true },
+            { icon: 'language',     title: 'Пантеон 9 сил', desc: 'Ведические архетипы', route: '/world', color: Colors.textMuted },
+            { icon: 'grid-4x4',    title: 'Матрица',         desc: 'Ресурсы и зоны задач', route: '/matrix-detail', color: Colors.textMuted, needsSession: true },
+            { icon: 'autorenew',   title: 'Циклы',           desc: 'Личный год и месяцы', route: '/cycles', color: Colors.textMuted, needsSession: true },
+            { icon: 'payments',    title: 'Денежный код',    desc: 'Карта реализации', route: '/money-code', color: Colors.textMuted, needsSession: true },
           ].map((mod, i, arr) => {
             const locked = Boolean(mod.needsSession && !hasSession);
             return (
@@ -163,12 +141,8 @@ export default function HomeScreen() {
                   }}
                   style={({ pressed }) => [styles.modRow, pressed && { backgroundColor: Colors.surfaceElevated }]}
                 >
-                  <View style={[
-                    styles.modIconWrap,
-                    locked && styles.modIconLocked,
-                    mod.highlight && styles.modIconHighlight,
-                  ]}>
-                    <MaterialIcons name={mod.icon as any} size={18} color={locked ? Colors.textDisabled : mod.highlight ? Colors.background : Colors.gold} />
+                  <View style={[styles.modIconWrap, { backgroundColor: (mod.color || Colors.gold) + '15', borderColor: (mod.color || Colors.gold) + '28' }]}>
+                    <MaterialIcons name={mod.icon as any} size={18} color={locked ? Colors.textDisabled : (mod.color || Colors.gold)} />
                   </View>
                   <View style={styles.modText}>
                     <Text style={[styles.modTitle, locked && { color: Colors.textDisabled }]}>{mod.title}</Text>
@@ -187,7 +161,7 @@ export default function HomeScreen() {
         </View>
       </View>
 
-      {/* ── Premium card ─────────────────────────────────────────── */}
+      {/* Premium */}
       <Pressable
         onPress={() => router.push('/continuation')}
         style={({ pressed }) => [styles.premiumCard, pressed && { opacity: 0.9 }]}
@@ -197,42 +171,21 @@ export default function HomeScreen() {
             <MaterialIcons name="workspace-premium" size={10} color={Colors.background} />
             <Text style={styles.premiumBadgeText}>ПРОДОЛЖЕНИЕ</Text>
           </View>
-          {!isPremium ? <Text style={styles.premiumPrice}>от 990 ₽</Text> : null}
         </View>
-        <Text style={styles.premiumTitle}>Дом Самопознания</Text>
+        <Text style={styles.premiumTitle}>Большое исследование</Text>
         <Text style={styles.premiumBody}>Матрица · Циклы · Деньги · PDF · Личный миф</Text>
         <View style={styles.premiumFooter}>
-          {isPremium ? (
-            <View style={styles.premiumRow}>
-              <MaterialIcons name="check-circle" size={13} color={Colors.gold} />
-              <Text style={styles.premiumRowText}>Доступ открыт</Text>
-            </View>
-          ) : (
-            <View style={styles.premiumRow}>
-              <Text style={styles.premiumCta}>Открыть путь получения</Text>
-              <MaterialIcons name="arrow-forward" size={13} color={Colors.gold} />
-            </View>
-          )}
+          <View style={styles.premiumRow}>
+            <Text style={styles.premiumCta}>Открыть путь получения</Text>
+            <MaterialIcons name="arrow-forward" size={13} color={Colors.gold} />
+          </View>
         </View>
       </Pressable>
 
-      {/* Recalculate CTA */}
       {hasSession ? (
-        <Pressable
-          onPress={() => router.push('/(tabs)/calculate')}
-          style={styles.recalcBtn}
-        >
+        <Pressable onPress={() => router.push('/(tabs)/calculate')} style={styles.recalcBtn}>
           <MaterialIcons name="calculate" size={14} color={Colors.textMuted} />
           <Text style={styles.recalcText}>Рассчитать другую дату</Text>
-        </Pressable>
-      ) : null}
-
-      {/* Saved */}
-      {savedReports.length > 0 ? (
-        <Pressable onPress={() => router.push('/(tabs)/saved')} style={styles.savedCard}>
-          <MaterialIcons name="bookmark" size={14} color={Colors.gold} />
-          <Text style={styles.savedText}>{savedReports.length} разбора сохранено</Text>
-          <MaterialIcons name="arrow-forward" size={14} color={Colors.textMuted} />
         </Pressable>
       ) : null}
 
@@ -249,7 +202,10 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: Spacing.lg, gap: Spacing.lg },
 
   topBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  wordmark: { ...Typography.subheading, color: Colors.textPrimary },
+  wordmark: {
+    fontSize: 22, fontWeight: '300', color: Colors.textPrimary,
+    letterSpacing: 1, fontFamily: 'serif',
+  },
   wordmarkSub: { ...Typography.caption, color: Colors.gold, fontStyle: 'italic', marginTop: 1 },
   avatarBtn: {},
   avatarCircle: {
@@ -258,21 +214,19 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center',
   },
 
-  // Entry group
-  entryGroup: { gap: Spacing.sm },
-
-  // Hero CTA
   heroCta: {
     borderRadius: Radii.xxl, overflow: 'hidden',
     borderWidth: 1, borderColor: Colors.border, ...Shadows.gold,
   },
   heroCtaGrad: { padding: Spacing.xl, gap: Spacing.md },
-  planetRow: { flexDirection: 'row', gap: 6 },
-  planetDot: { width: 10, height: 10, borderRadius: 5, opacity: 0.7 },
+  heroOrbRow: { flexDirection: 'row', gap: Spacing.sm },
   heroBadge: { flexDirection: 'row', alignItems: 'center', gap: 7 },
   heroBadgeDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: Colors.gold },
   heroBadgeText: { ...Typography.label, color: Colors.gold, letterSpacing: 2 },
-  heroTitle: { fontSize: 26, fontWeight: '700', color: Colors.textPrimary, lineHeight: 32 },
+  heroTitle: {
+    fontSize: 24, fontWeight: '400', color: Colors.textPrimary,
+    lineHeight: 32, fontFamily: 'serif',
+  },
   heroBody: { ...Typography.bodySmall, color: Colors.textMuted, lineHeight: 22 },
   heroBtn: {
     flexDirection: 'row', alignItems: 'center', gap: 6,
@@ -281,48 +235,29 @@ const styles = StyleSheet.create({
   },
   heroBtnText: { ...Typography.button, color: Colors.background, fontWeight: '700' },
 
-  // World card
-  worldCard: {
-    flexDirection: 'row', alignItems: 'center', gap: Spacing.md,
-    backgroundColor: Colors.surface, borderRadius: Radii.xl,
-    borderWidth: 1, borderColor: Colors.borderLight, padding: Spacing.md,
-  },
-  worldTitle: { ...Typography.bodySmall, color: Colors.textPrimary, fontWeight: '600', marginBottom: 2 },
-  worldDesc: { ...Typography.caption, color: Colors.textMuted },
-
-  // Active session
-  sessionGroup: { gap: Spacing.sm },
   sessionCard: {
     backgroundColor: Colors.surface, borderRadius: Radii.xl,
-    borderWidth: 1, borderColor: Colors.border, padding: Spacing.xl,
-    gap: Spacing.sm, ...Shadows.lg,
+    borderWidth: 1, borderColor: Colors.border,
+    padding: Spacing.xl, gap: Spacing.sm, ...Shadows.lg,
   },
   sessionCardTop: { flexDirection: 'row', alignItems: 'flex-start', gap: Spacing.md },
   sessionLabel: { ...Typography.label, color: Colors.gold, marginBottom: 4 },
   sessionName: { ...Typography.title, color: Colors.textPrimary, fontSize: 22, marginBottom: 3 },
   sessionDob: { ...Typography.caption, color: Colors.textMuted },
-  formulaCircle: {
-    width: 76, height: 76, borderRadius: 38, borderWidth: 1,
-    alignItems: 'center', justifyContent: 'center',
+  statsRow: {
+    flexDirection: 'row', backgroundColor: Colors.surfaceMid,
+    borderRadius: Radii.lg, borderWidth: 1, borderColor: Colors.borderLight,
   },
-  formulaText: { fontSize: 11, fontWeight: '700', letterSpacing: 0.8, textAlign: 'center', lineHeight: 16 },
+  stat: { flex: 1, alignItems: 'center', paddingVertical: Spacing.sm, gap: 1 },
+  statFinal: { fontSize: 18, fontWeight: '700' },
+  statLabel: { ...Typography.caption, color: Colors.textMuted, fontSize: 9 },
+  statDivider: { width: 1, backgroundColor: Colors.borderLight, marginVertical: Spacing.sm },
   sessionFooter: {
     flexDirection: 'row', alignItems: 'center', gap: 5,
     borderTopWidth: 1, borderTopColor: Colors.borderLight, paddingTop: Spacing.sm, marginTop: 2,
   },
   sessionCta: { ...Typography.caption, color: Colors.gold, fontWeight: '600' },
 
-  statsRow: {
-    flexDirection: 'row', backgroundColor: Colors.surface,
-    borderRadius: Radii.lg, borderWidth: 1, borderColor: Colors.borderLight,
-  },
-  stat: { flex: 1, alignItems: 'center', paddingVertical: Spacing.sm, gap: 1 },
-  statFinal: { fontSize: 18, fontWeight: '700' },
-  statComp: { fontSize: 9 },
-  statLabel: { ...Typography.caption, color: Colors.textMuted, fontSize: 9 },
-  statDivider: { width: 1, backgroundColor: Colors.borderLight, marginVertical: Spacing.sm },
-
-  // Modules
   section: { gap: Spacing.sm },
   sectionTitle: { ...Typography.bodySmall, color: Colors.textMuted, fontWeight: '600' },
   moduleList: {
@@ -331,38 +266,32 @@ const styles = StyleSheet.create({
   },
   modRow: {
     flexDirection: 'row', alignItems: 'center',
-    padding: Spacing.md, gap: Spacing.md, minHeight: 60,
+    padding: Spacing.md, gap: Spacing.md, minHeight: 58,
   },
   modIconWrap: {
     width: 36, height: 36, borderRadius: Radii.sm,
-    backgroundColor: Colors.goldGlow, alignItems: 'center', justifyContent: 'center',
-    borderWidth: 1, borderColor: Colors.border,
+    alignItems: 'center', justifyContent: 'center', borderWidth: 1,
   },
-  modIconLocked: { backgroundColor: Colors.surfaceAlt, borderColor: Colors.borderLight },
-  modIconHighlight: { backgroundColor: Colors.gold },
   modText: { flex: 1 },
   modTitle: { ...Typography.bodySmall, color: Colors.textPrimary, fontWeight: '600' },
   modDesc: { ...Typography.caption, color: Colors.textMuted, marginTop: 2 },
   modDivider: { height: 1, backgroundColor: Colors.borderLight, marginHorizontal: Spacing.md },
 
-  // Premium
   premiumCard: {
     backgroundColor: Colors.surface, borderRadius: Radii.xl,
     borderWidth: 1, borderColor: Colors.border, padding: Spacing.xl, gap: Spacing.sm,
   },
-  premiumTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  premiumTop: { flexDirection: 'row' },
   premiumBadge: {
     flexDirection: 'row', alignItems: 'center', gap: 4,
     backgroundColor: Colors.gold, alignSelf: 'flex-start',
     borderRadius: Radii.full, paddingHorizontal: 8, paddingVertical: 4,
   },
   premiumBadgeText: { ...Typography.label, color: Colors.background, fontSize: 9 },
-  premiumPrice: { fontSize: 18, fontWeight: '700', color: Colors.gold },
   premiumTitle: { ...Typography.subheading, color: Colors.textPrimary },
   premiumBody: { ...Typography.caption, color: Colors.textMuted },
   premiumFooter: { borderTopWidth: 1, borderTopColor: Colors.borderLight, paddingTop: Spacing.sm, marginTop: 2 },
   premiumRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
-  premiumRowText: { ...Typography.caption, color: Colors.gold },
   premiumCta: { ...Typography.caption, color: Colors.gold, fontWeight: '600' },
 
   recalcBtn: {
@@ -370,13 +299,6 @@ const styles = StyleSheet.create({
     gap: 6, paddingVertical: Spacing.sm,
   },
   recalcText: { ...Typography.caption, color: Colors.textMuted },
-
-  savedCard: {
-    flexDirection: 'row', alignItems: 'center', gap: Spacing.sm,
-    backgroundColor: Colors.surface, borderRadius: Radii.lg,
-    borderWidth: 1, borderColor: Colors.borderLight, padding: Spacing.md,
-  },
-  savedText: { ...Typography.bodySmall, color: Colors.textSecondary, flex: 1 },
 
   trust: { alignItems: 'center', gap: 3 },
   trustText: { ...Typography.caption, color: Colors.textDisabled, textAlign: 'center' },

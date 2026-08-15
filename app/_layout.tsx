@@ -22,7 +22,8 @@ export default function RootLayout() {
             <Stack.Screen name="money-code" options={{ presentation: 'card' }} />
             <Stack.Screen name="age-map" options={{ presentation: 'card' }} />
             <Stack.Screen name="report" options={{ presentation: 'modal' }} />
-            <Stack.Screen name="paywall" options={{ presentation: 'modal' }} />
+            <Stack.Screen name="myth" options={{ presentation: 'card' }} />
+            <Stack.Screen name="meeting" options={{ presentation: 'card' }} />
             <Stack.Screen name="threshold" options={{ presentation: 'card' }} />
             <Stack.Screen name="world" options={{ presentation: 'card' }} />
             <Stack.Screen name="reveal" options={{ presentation: 'card' }} />
